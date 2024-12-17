@@ -7916,10 +7916,10 @@ div#banners .bannerText {
   }
 }
 [data-theme=dark] {
-  --rin-theme: #998083;
-  --rin-theme-op: rgba(153,128,131,0.137);
-  --rin-theme-op-deep: rgba(153,128,131,0.867);
-  --rin-theme-none: rgba(153,128,131,0);
+  --rin-theme: #809199;
+  --rin-theme-op: rgba(128,145,153,0.137);
+  --rin-theme-op-deep: rgba(128,145,153,0.867);
+  --rin-theme-none: rgba(128,145,153,0);
   --rin-blue: #0084ff;
   --rin-red: #ff3842;
   --rin-pink: #d44040;
@@ -7967,11 +7967,11 @@ div#banners .bannerText {
   --rin-ban: rgba(0,0,0,0.1);
 }
 [data-theme=light] {
-  --rin-theme: #4f4252;
-  --rin-theme-op: rgba(79,66,82,0.137);
-  --rin-theme-op-deep: rgba(79,66,82,0.867);
+  --rin-theme: #424c52;
+  --rin-theme-op: rgba(66,76,82,0.137);
+  --rin-theme-op-deep: rgba(66,76,82,0.867);
   --rin-theme-op-light: rgba(66,89,239,0.051);
-  --rin-theme-none: rgba(79,66,82,0);
+  --rin-theme-none: rgba(66,76,82,0);
   --rin-blue: #425aef;
   --rin-red: #f04a63;
   --rin-pink: #ff7c7c;
