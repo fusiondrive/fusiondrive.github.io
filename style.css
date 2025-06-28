@@ -1,80 +1,91 @@
-/* --- Global Styles & Resets --- */
+/* --- Global Styles & Expressive Font --- */
 body {
-    /* Use system fonts for a native feel */
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    /* Expressive Font: Using 'Lexend' imported from Google Fonts */
+    font-family: 'Lexend', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     margin: 0;
-    padding-top: 50px; /* Keep content from hiding behind the nav */
+    padding-top: 50px;
     
-    /* Base theme colors */
-    background-color: #ffffff;
-    color: #000000;
+    /* M3 Neutral background color */
+    background-color: #fef7ff; /* A light, neutral purple-ish white */
+    color: #1d1b20; /* M3 default on-surface text color */
     
-    /* Animate the theme change */
     transition: background-color 0.3s, color 0.3s;
 }
 
-/* --- Navigation Bar --- */
+/* --- Navigation Bar Container --- */
 .navigation-bar {
-    /* Center the items inside */
     display: flex;
     justify-content: center;
     align-items: center;
-    
-    /* Center the bar on the page */
     margin: 0 auto;
+    padding: 12px; /* A bit more spacious */
+    width: fit-content;
     
-    padding: 8px;
-    width: fit-content; /* Let the container shrink-to-fit */
+    background-color: #f3edf7; /* M3 Surface Container Low color */
     
-    background-color: #f0f0f0;
-    border-radius: 999px; /* Large value to guarantee a "pill" shape */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Give it some depth */
+    /* Expressive Shape: Asymmetrical border radius for a "quirky" look */
+    border-radius: 28px 12px 28px 12px;
+    
+    /* M3 Shadow (Level 2) */
+    box-shadow: 0 1px 2px rgba(0,0,0,0.3), 0 2px 6px 2px rgba(0,0,0,0.15);
 }
 
 .navigation-bar ul {
-    /* Basic list reset */
     list-style: none;
     margin: 0;
     padding: 0;
-    
     display: flex;
-    gap: 16px; /* Space out the links */
+    gap: 8px; /* Slightly tighter gap for the "chip" look */
 }
 
+/* --- Navigation Links --- */
 .navigation-bar a {
-    text-decoration: none; /* Ditch the underline */
-    color: #333333;
-    padding: 10px 16px; /* Bigger click target */
+    text-decoration: none;
+    padding: 10px 20px; /* More horizontal padding */
     font-size: 16px;
     font-weight: 500;
+    color: #49454f; /* M3 On Surface Variant text */
     
-    border-radius: 999px; /* For the hover effect's background */
+    display: block;
+    border-radius: 20px; /* A standard rounded shape for inactive links */
     transition: background-color 0.3s, color 0.3s;
 }
 
-.navigation-bar a:hover {
-    background-color: #e0e0e0;
+.navigation-bar a:hover:not(.active) {
+    background-color: #eaddf7; /* Hover state for inactive links */
+}
+
+/* Expressive Color: Punchy accent for the active link */
+.navigation-bar a.active {
+    background-color: #6750a4; /* M3 Primary color */
+    color: #ffffff; /* Text on accent color is white */
+    font-weight: 600;
 }
 
 
-/* --- Dark Mode Overrides --- */
+/* --- Dark Mode Overrides (M3 Expressive Style) --- */
 @media (prefers-color-scheme: dark) {
     body {
-        /* Use a darker grey, not pure black, for better contrast */
-        background-color: #121212;
-        color: #ffffff;
+        background-color: #141218;
+        color: #e6e0e9;
     }
 
     .navigation-bar {
-        background-color: #2c2c2e;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        background-color: #2b2930; /* Darker surface color */
+        /* In dark mode, shadows are often replaced by subtle light differences */
+        box-shadow: none; 
     }
 
     .navigation-bar a {
-        color: #f5f5f7;
+        color: #cac4d0;
     }
 
-    .navigation-bar a:hover {
-        background-color: #3a3a3c;
+    .navigation-bar a:hover:not(.active) {
+        background-color: #403c4a;
+    }
+    
+    .navigation-bar a.active {
+        background-color: #d0bcff; /* A lighter, more vibrant accent for dark theme */
+        color: #381e72; /* Darker text for contrast on the light accent */
     }
 }
