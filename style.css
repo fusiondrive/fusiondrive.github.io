@@ -89,3 +89,54 @@ body {
         color: #381e72; /* Darker text for contrast on the light accent */
     }
 }
+
+
+/* --- Main Content & Hero Section --- */
+
+main {
+    /* Adjust for left alignment */
+    display: block;
+    width: 100%;
+    max-width: 900px; 
+    margin: 80px auto; 
+    padding: 0 24px;
+    box-sizing: border-box;
+}
+
+.hero-section {
+    text-align: left;
+    padding: 0;
+}
+
+
+/* --- Material 3 Typography Scale --- */
+/* These classes implement the official M3 type scale */
+
+.m3-display-large {
+    font-size: 57px;
+    font-weight: 400;
+    line-height: 64px;
+    letter-spacing: -0.25px;
+    margin: 0;
+}
+
+.m3-headline-small {
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 32px;
+    margin: 16px 0 0 0; /* Add some space above */
+    
+    /* Use a secondary text color for lower emphasis, per M3 guidelines */
+    color: #49454f;
+}
+
+
+/* --- Dark Mode Overrides for New Content --- */
+/* This media query block already exists, just add the new rule inside */
+
+@media (prefers-color-scheme: dark) {
+    .m3-headline-small {
+        /* Update the secondary text color for dark mode */
+        color: #cac4d0;
+    }
+}
