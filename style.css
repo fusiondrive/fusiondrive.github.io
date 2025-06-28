@@ -140,3 +140,52 @@ main {
         color: #cac4d0;
     }
 }
+
+/* style.css */
+
+/* --- Call to Action (CTA) Button --- */
+.cta-container {
+    /* Add space above the button */
+    margin-top: 32px; 
+}
+
+.m3-button {
+    /* Button Layout */
+    display: inline-block; /* Allows padding and margin */
+    padding: 12px 28px;
+    text-decoration: none; /* Remove underline */
+
+    /* M3 "Filled" Button Style */
+    background-color: #6750a4; /* M3 Primary color */
+    color: #ffffff; /* Text color on primary */
+    border-radius: 999px; /* Pill shape */
+    
+    /* M3 Typography */
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.1px;
+    
+    /* M3 Shadow (Level 1) & Transition */
+    box-shadow: 0 1px 2px rgba(0,0,0,0.3), 0 1px 3px 1px rgba(0,0,0,0.15);
+    transition: box-shadow 0.2s ease-in-out;
+}
+
+.m3-button:hover {
+    /* M3 Hover State - slightly elevated shadow */
+    box-shadow: 0 1px 2px rgba(0,0,0,0.3), 0 2px 6px 2px rgba(0,0,0,0.15);
+}
+
+
+/* --- Dark Mode Override for Button --- */
+@media (prefers-color-scheme: dark) {
+    .m3-button {
+        background-color: #d0bcff; /* Lighter primary for dark theme */
+        color: #381e72; /* Darker text for contrast */
+        box-shadow: none; /* Shadows are less prominent in dark mode */
+    }
+
+    .m3-button:hover {
+        /* In dark mode, we can create a subtle overlay on hover */
+        background-color: #d8c6ff;
+    }
+}
