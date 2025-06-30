@@ -1,4 +1,9 @@
 /* --- Global Styles & Expressive Font --- */
+/* Your original styles, slightly adjusted for smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     /* Expressive Font: Using 'Lexend' imported from Google Fonts */
     font-family: 'Lexend', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -13,7 +18,14 @@ body {
 }
 
 /* --- Navigation Bar Container --- */
+/* Your original styles, with position fixed for better UX */
 .navigation-bar {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+
     display: flex;
     justify-content: center;
     align-items: center;
@@ -39,6 +51,7 @@ body {
 }
 
 /* --- Navigation Links --- */
+/* Your original styles */
 .navigation-bar a {
     text-decoration: none;
     padding: 10px 20px; /* More horizontal padding */
@@ -63,55 +76,32 @@ body {
 }
 
 
-/* --- Dark Mode Overrides (M3 Expressive Style) --- */
-@media (prefers-color-scheme: dark) {
-    body {
-        background-color: #141218;
-        color: #e6e0e9;
-    }
-
-    .navigation-bar {
-        background-color: #2b2930; /* Darker surface color */
-        /* In dark mode, shadows are often replaced by subtle light differences */
-        box-shadow: none; 
-    }
-
-    .navigation-bar a {
-        color: #cac4d0;
-    }
-
-    .navigation-bar a:hover:not(.active) {
-        background-color: #403c4a;
-    }
-    
-    .navigation-bar a.active {
-        background-color: #d0bcff; /* A lighter, more vibrant accent for dark theme */
-        color: #381e72; /* Darker text for contrast on the light accent */
-    }
-}
-
-
-/* --- Main Content & Hero Section --- */
-
+/* --- Main Content & Sections --- */
 main {
-    /* Adjust for left alignment */
     display: block;
     width: 100%;
     max-width: 900px; 
-    margin: 80px auto; 
+    margin: 0 auto; 
     padding: 0 24px;
     box-sizing: border-box;
 }
 
 .hero-section {
     text-align: left;
-    padding: 0;
+    padding: 120px 0 80px 0; /* More padding to clear the fixed nav */
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.content-section {
+    padding: 60px 0;
 }
 
 
 /* --- Material 3 Typography Scale --- */
-/* These classes implement the official M3 type scale */
-
+/* Your original styles, with new ones added */
 .m3-display-large {
     font-size: 57px;
     font-weight: 400;
@@ -120,72 +110,249 @@ main {
     margin: 0;
 }
 
+.m3-headline-large {
+    font-size: 32px;
+    font-weight: 400;
+    line-height: 40px;
+    margin: 0 0 32px 0;
+    color: #1d1b20;
+}
+
 .m3-headline-small {
     font-size: 24px;
     font-weight: 400;
     line-height: 32px;
-    margin: 16px 0 0 0; /* Add some space above */
-    
-    /* Use a secondary text color for lower emphasis, per M3 guidelines */
+    margin: 16px 0 0 0;
+    color: #49454f;
+}
+
+.m3-title-large {
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 28px;
+    margin: 0 0 8px 0;
+}
+
+.m3-title-medium {
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 24px;
+    letter-spacing: 0.15px;
+    margin: 0 0 12px 0;
+    color: #49454f;
+}
+
+.m3-body-large {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+    letter-spacing: 0.5px;
+    margin: 0;
     color: #49454f;
 }
 
 
-/* --- Dark Mode Overrides for New Content --- */
-/* This media query block already exists, just add the new rule inside */
-
-@media (prefers-color-scheme: dark) {
-    .m3-headline-small {
-        /* Update the secondary text color for dark mode */
-        color: #cac4d0;
-    }
-}
-
-/* style.css */
-
-/* --- Call to Action (CTA) Button --- */
+/* --- CTA Buttons --- */
 .cta-container {
-    /* Add space above the button */
     margin-top: 32px; 
+    display: flex;
+    gap: 12px;
 }
 
 .m3-button {
-    /* Button Layout */
-    display: inline-block; /* Allows padding and margin */
+    display: inline-block;
     padding: 12px 28px;
-    text-decoration: none; /* Remove underline */
-
-    /* M3 "Filled" Button Style */
-    background-color: #6750a4; /* M3 Primary color */
-    color: #ffffff; /* Text color on primary */
-    border-radius: 999px; /* Pill shape */
-    
-    /* M3 Typography */
+    text-decoration: none;
+    background-color: #6750a4;
+    color: #ffffff;
+    border-radius: 999px;
     font-size: 15px;
     font-weight: 600;
     letter-spacing: 0.1px;
-    
-    /* M3 Shadow (Level 1) & Transition */
     box-shadow: 0 1px 2px rgba(0,0,0,0.3), 0 1px 3px 1px rgba(0,0,0,0.15);
-    transition: box-shadow 0.2s ease-in-out;
+    transition: box-shadow 0.2s ease-in-out, background-color 0.3s;
 }
 
 .m3-button:hover {
-    /* M3 Hover State - slightly elevated shadow */
     box-shadow: 0 1px 2px rgba(0,0,0,0.3), 0 2px 6px 2px rgba(0,0,0,0.15);
 }
 
-
-/* --- Dark Mode Override for Button --- */
-@media (prefers-color-scheme: dark) {
-    .m3-button {
-        background-color: #d0bcff; /* Lighter primary for dark theme */
-        color: #381e72; /* Darker text for contrast */
-        box-shadow: none; /* Shadows are less prominent in dark mode */
-    }
-
-    .m3-button:hover {
-        /* In dark mode, we can create a subtle overlay on hover */
-        background-color: #d8c6ff;
-    }
+/* Outlined Button Style */
+.m3-button-outlined {
+    display: inline-block;
+    padding: 11px 27px; /* 1px less to account for border */
+    text-decoration: none;
+    background-color: transparent;
+    color: #6750a4; /* Primary color for text */
+    border: 1px solid #79747e; /* M3 Outline color */
+    border-radius: 999px;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.1px;
+    transition: background-color 0.3s;
 }
+
+.m3-button-outlined:hover {
+    background-color: rgba(103, 80, 164, 0.08); /* Primary color with low opacity for hover */
+}
+
+
+/* --- Project Cards --- */
+.project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+}
+
+.m3-card {
+    background-color: #f3edf7; /* M3 Surface Container Low */
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: background-color 0.3s;
+}
+
+.card-media {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    background-color: #eaddf7;
+}
+
+.card-content {
+    padding: 16px;
+    flex-grow: 1;
+}
+
+.card-actions {
+    padding: 8px 16px 16px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.m3-text-button {
+    text-decoration: none;
+    color: #6750a4; /* Primary color */
+    font-size: 14px;
+    font-weight: 600;
+    padding: 8px 12px;
+    border-radius: 999px;
+    transition: background-color 0.3s;
+}
+
+.m3-text-button:hover {
+    background-color: rgba(103, 80, 164, 0.08);
+}
+
+
+/* --- Skills & Tools Chips --- */
+.skills-container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.chip-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.m3-chip {
+    background-color: #eaddf7; /* M3 Secondary Container */
+    color: #49454f; /* On Secondary Container */
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.3s;
+}
+
+
+/* --- Connect Icon Buttons --- */
+.icon-button-group {
+    margin-top: 16px;
+    display: flex;
+    gap: 12px;
+}
+
+.m3-icon-button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: transparent;
+    transition: background-color 0.3s;
+}
+
+.m3-icon-button svg {
+    fill: #49454f; /* On Surface Variant */
+    transition: fill 0.3s;
+}
+
+.m3-icon-button:hover {
+    background-color: rgba(103, 80, 164, 0.08);
+}
+
+
+/* =========================================== */
+/* --- Dark Mode Overrides (M3 Expressive Style) --- */
+/* =========================================== */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #141218;
+        color: #e6e0e9;
+    }
+
+    /* --- Navigation --- */
+    .navigation-bar {
+        background-color: #2b2930;
+        box-shadow: none; 
+    }
+    .navigation-bar a { color: #cac4d0; }
+    .navigation-bar a:hover:not(.active) { background-color: #403c4a; }
+    .navigation-bar a.active {
+        background-color: #d0bcff;
+        color: #381e72;
+    }
+
+    /* --- Typography --- */
+    .m3-headline-large { color: #e6e0e9; }
+    .m3-headline-small { color: #cac4d0; }
+    .m3-title-medium { color: #cac4d0; }
+    .m3-body-large { color: #cac4d0; }
+
+    /* --- Buttons --- */
+    .m3-button {
+        background-color: #d0bcff;
+        color: #381e72;
+        box-shadow: none;
+    }
+    .m3-button:hover { background-color: #d8c6ff; }
+    .m3-button-outlined {
+        color: #d0bcff;
+        border-color: #938f99;
+    }
+    .m3-button-outlined:hover { background-color: rgba(208, 188, 255, 0.08); }
+
+    /* --- Cards --- */
+    .m3-card { background-color: #2b2930; }
+    .card-media { background-color: #403c4a; }
+    .m3-text-button { color: #d0bcff; }
+    .m3-text-button:hover { background-color: rgba(208, 188, 255, 0.08); }
+
+    /* --- Chips --- */
+    .m3-chip {
+        background-color: #4a4458; /* Dark M3 Secondary Container */
+        color: #e8def8; /* On Secondary Container */
+    }
+
+    /* --- Icon Buttons --- */
+    .m3-icon-button svg { fill: #cac4d0; }
+    .m3-icon-button:hover { background-color: rgba(208, 188, 255, 0.08); }
+}
+

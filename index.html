@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Personal Homepage</title>
+    <title>Steve Wang - ECE Student & Tech Enthusiast</title>
     
     <link rel="stylesheet" href="style.css">
     
@@ -13,25 +13,149 @@
 </head>
 <body>
 
+    <!-- Navigation: Your original expressive navigation bar -->
     <nav class="navigation-bar">
         <ul>
-            <li><a href="#" class="active">Home</a></li>
-            <li><a href="#">Projects</a></li>
-            <li><a href="#">Craft</a></li>
-            <li><a href="#">Connect</a></li>
+            <li><a href="#hero" class="active">Home</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#connect">Connect</a></li>
         </ul>
     </nav>
 
     <main>
-        <section class="hero-section">
-            <h1 class="m3-display-large">Hello, I'm Steve Wang.</h1>
-            <p class="m3-headline-small">an ECE student in Ohio State University.</p>
+        <!-- Hero Section: Updated with your personal tagline -->
+        <section id="hero" class="hero-section">
+            <h1 class="m3-display-large">Steve Wang</h1>
+            <p class="m3-headline-small">An Electrical and Computer Engineering student, passionate about the intersection of elegant software and intricate hardware.</p>
 
             <div class="cta-container">
-                <a href="#" class="m3-button">View My Work</a>
+                <a href="#projects" class="m3-button">View My Work</a>
+                <!-- UPDATED: Resume link now points to your Google Drive -->
+                <a href="https://drive.google.com/file/d/10Kz4i0oMrct0hbHvOSK9hqNIlwiNXm1Q/view?usp=sharing" class="m3-button-outlined" target="_blank">View Resume</a>
             </div>
         </section>
+
+        <!-- Projects Section: Using M3 Cards -->
+        <section id="projects" class="content-section">
+            <h2 class="m3-headline-large">Featured Projects</h2>
+            <div class="project-grid">
+                <!-- Project 1: Swiss Clock -->
+                <div class="m3-card">
+                    <!-- UPDATED: Image source now points to a local file -->
+                    <img src="./assets/swiss-clock.gif" alt="Swiss Railway Clock Project Screenshot" class="card-media">
+                    <div class="card-content">
+                        <h3 class="m3-title-large">Swiss Railway Clock Homage</h3>
+                        <p class="m3-body-large">An interactive web clock inspired by the classic Mondaine design. All assets were hand-drawn in Figma to achieve maximum fidelity, including the famous "stop-to-go" second hand movement.</p>
+                    </div>
+                    <div class="card-actions">
+                        <a href="https://github.com/fusiondrive/Mondaine-Clock" target="_blank" class="m3-text-button">View on GitHub</a>
+                        <a href="#" class="m3-text-button">Live Demo</a>
+                    </div>
+                </div>
+
+                <!-- Project 2: iMac Upgrade -->
+                <div class="m3-card">
+                    <!-- UPDATED: Image source now points to a local file -->
+                    <img src="./assets/imac-teardown.jpeg" alt="iMac hardware upgrade project" class="card-media">
+                    <div class="card-content">
+                        <h3 class="m3-title-large">Project: iMac 2019 Revival</h3>
+                        <p class="m3-body-large">A comprehensive hardware overhaul of a classic Intel 2019 iMac. The project involved a full teardown to upgrade the CPU, screen, RAM, and SSD, bringing it back to life for modern-day use.</p>
+                    </div>
+                    <div class="card-actions">
+                        <a href="#" class="m3-text-button">Read the Story</a>
+                    </div>
+                </div>
+                
+                <!-- Project 3: HackOH/IO Website -->
+                <div class="m3-card">
+                     <!-- UPDATED: Image source now points to a local file -->
+                     <img src="./assets/hackohio.png" alt="HackOH/IO Website Screenshot" class="card-media">
+                    <div class="card-content">
+                        <h3 class="m3-title-large">HackOH/IO Website Maintenance</h3>
+                        <p class="m3-body-large">As part of the web team, I used HTML and JavaScript to maintain and update the official website for Ohio State's largest hackathon, optimizing the user experience for thousands of participants.</p>
+                    </div>
+                    <div class="card-actions">
+                        <a href="https://hack.osu.edu/" target="_blank" class="m3-text-button">Visit Website</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section: Using M3 Chips -->
+        <section id="skills" class="content-section">
+            <h2 class="m3-headline-large">Skills & Tools</h2>
+            <div class="skills-container">
+                <div class="skill-category">
+                    <h3 class="m3-title-medium">Languages</h3>
+                    <div class="chip-group">
+                        <div class="m3-chip">C++</div>
+                        <div class="m3-chip">C</div>
+                        <div class="m3-chip">Java</div>
+                        <div class="m3-chip">Python</div>
+                        <div class="m3-chip">JavaScript</div>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3 class="m3-title-medium">Hardware</h3>
+                    <div class="chip-group">
+                        <div class="m3-chip">PC/Mac Assembly</div>
+                        <div class="m3-chip">Component-Level Repair</div>
+                        <div class="m3-chip">Hardware Upgrades</div>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3 class="m3-title-medium">Design & Tools</h3>
+                    <div class="chip-group">
+                        <div class="m3-chip">Figma</div>
+                        <div class="m3-chip">Git & GitHub</div>
+                        <div class="m3-chip">CAD</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Connect Section: Using M3 Icon Buttons -->
+        <section id="connect" class="content-section">
+            <h2 class="m3-headline-large">Let's Connect</h2>
+            <p class="m3-body-large">Feel free to reach out. I'm always open to discussing new projects, creative ideas, or opportunities.</p>
+            <div class="icon-button-group">
+                <a href="mailto:wang.16327@osu.edu" class="m3-icon-button" aria-label="Email">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0l-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z"/></svg>
+                </a>
+                <a href="https://github.com/fusiondrive" target="_blank" class="m3-icon-button" aria-label="GitHub">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12 1.27a11 11 0 00-3.48 21.46c.55.1.73-.24.73-.53v-1.84c-3 .66-3.6-1.44-3.6-1.44-.5-1.27-1.22-1.6-1.22-1.6-1-.68.08-.67.08-.67 1.1.08 1.68 1.13 1.68 1.13.98 1.68 2.56 1.2 3.18.92.1-.7.38-1.2 1.1-1.48-2.4-.27-4.92-1.2-4.92-5.33 0-1.18.42-2.14 1.1-2.9-.1-.28-.48-1.36.1-2.85 0 0 .9-.3 3 1.1.85-.24 1.75-.36 2.65-.36.9 0 1.8.12 2.65-.36 2.1-1.4 3-1.1 3-1.1.58 1.5.2 2.57.1 2.85.7.76 1.1 1.72 1.1 2.9 0 4.14-2.53 5.06-4.95 5.33.4.35.75 1.03.75 2.08v2.95c0 .3.18.63.73.53A11 11 0 0012 1.27z"/></svg>
+                </a>
+                <a href="#" class="m3-icon-button" aria-label="LinkedIn">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 3a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h14zm-7 6.67h-2.5v7.66h2.5v-7.66zM8.25 8.5a1.25 1.25 0 100-2.5 1.25 1.25 0 000 2.5zm4.25 1.83h-2.5v7.66h2.5v-4.17c0-1.17.25-2.33 1.75-2.33s1.5 1.33 1.5 2.33v4.17h2.5v-4.92c0-2.5-1.5-4.33-3.5-4.33-1.58 0-2.5 1.08-2.5 1.08v-.91h-2.75v7.66h2.5v-4.25z"/></svg>
+                </a>
+            </div>
+        </section>
+
     </main>
+    
+    <script>
+        // Simple script for active navigation link
+        const navLinks = document.querySelectorAll('.navigation-bar a');
+        const sections = document.querySelectorAll('main section');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 60) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
 
 </body>
 </html>
