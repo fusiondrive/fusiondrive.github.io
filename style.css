@@ -177,19 +177,25 @@ main {
     height: 200px; 
     object-fit: cover; 
     background-color: #eaddf7; 
-    border-radius: 16px;
+    border-radius: 16px; 
     display: block;
+    position: relative;
+    z-index: 2;
 }
 
 /* The text area is the bottom block, seamlessly joined to the image */
 .card-text-area {
     background-color: #f3edf7;
-    border-radius: 0 0 16px 16px;
-    margin-top: 0;
-    padding: 16px;
+    border-radius: 16px; /* Give it the same radius as the image */
+    /* UPDATED: Pull the text area up to sit behind the image's bottom corners */
+    margin-top: -16px; 
+    /* UPDATED: Add padding to the top to push content down, away from the overlap */
+    padding: 32px 16px 16px 16px;
     flex-grow: 1;
     display: flex;
     flex-direction: column;
+    position: relative;
+    z-index: 1; 
 }
 
 .card-content { 
