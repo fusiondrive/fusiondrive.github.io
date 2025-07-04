@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Steve Wang - ECE Student & Tech Enthusiast</title>
     
-    <!-- CSS Stylesheet -->
+    <!-- link to style.css -->
     <link rel="stylesheet" href="css/style.css">
     
     <!-- Google Fonts -->
@@ -133,11 +133,6 @@
         </footer>
     </main>
      
-    <!-- Theme Switcher Floating Action Button -->
-    <button id="theme-switcher" class="theme-switcher" aria-label="切换主题">
-        <span class="material-symbols-outlined">palette</span>
-    </button>
-
     <script>
         // --- Original Script: Nav Link Active State & Scroll Animation ---
         const navLinks = document.querySelectorAll('.m3-navigation-bar a');
@@ -173,71 +168,33 @@
         const elementsToReveal = document.querySelectorAll('.reveal-on-scroll');
         elementsToReveal.forEach(el => observer.observe(el));
 
-        // --- NEW: M3 Dynamic Theme Controller ---
+        // --- NEW: M3 Random Theme on Load Controller ---
         (function() {
-            const themeSwitcherBtn = document.getElementById('theme-switcher');
-            if (!themeSwitcherBtn) return;
-
-            // 1. Define available themes (must match the names in CSS data-theme attributes)
+            // 1. 定义可用的主题
             const themes = ['default', 'ocean', 'forest'];
-            let currentThemeIndex = 0;
+            
+            // 在页面加载时，保存一个随机主题，以便在亮/暗模式切换时保持一致
+            const currentRandomTheme = themes[Math.floor(Math.random() * themes.length)];
 
             /**
-             * Applies a theme by setting the data-theme attribute on the <html> element.
-             * It respects the user's OS-level light/dark mode preference.
-             * @param {string} themeName - The name of the theme to apply (e.g., 'ocean').
+             * 应用一个主题，会根据用户的系统设置自动选择亮色或暗色变体
+             * @param {string} themeName - 要应用的主题名称 (例如 'ocean')
              */
             function applyTheme(themeName) {
                 const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
                 const themeVariant = isDarkMode ? `${themeName}-dark` : `${themeName}-light`;
                 document.documentElement.setAttribute('data-theme', themeVariant);
-                localStorage.setItem('user-theme', themeName); // Save choice
-                console.log(`Theme applied: ${themeVariant}`);
+                console.log(`Random theme applied: ${themeVariant}`);
             }
 
-            /**
-             * Cycles to the next theme in the themes array.
-             */
-            function cycleTheme() {
-                currentThemeIndex = (currentThemeIndex + 1) % themes.length;
-                const nextTheme = themes[currentThemeIndex];
-                applyTheme(nextTheme);
-            }
+            // 2. 初始化：页面加载时立即应用选定的随机主题
+            applyTheme(currentRandomTheme);
 
-            // 2. Initialization
-            // On page load, apply the saved theme or the first theme as default.
-            const savedTheme = localStorage.getItem('user-theme') || themes[0];
-            const initialThemeIndex = themes.indexOf(savedTheme);
-            currentThemeIndex = initialThemeIndex !== -1 ? initialThemeIndex : 0;
-            applyTheme(themes[currentThemeIndex]);
-
-            // 3. Event Listeners
-            // Button click event
-            themeSwitcherBtn.addEventListener('click', cycleTheme);
-
-            // Listen for changes in OS color scheme (light/dark mode)
+            // 3. 事件监听：监听操作系统的亮/暗模式切换
+            // 这能确保在用户切换系统模式时，网页能无缝切换到对应主题的亮/暗版本
             window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-                // Re-apply the current theme to get the correct light/dark variant
-                applyTheme(themes[currentThemeIndex]);
-            });
-
-            // 4. Easter Egg: Konami Code
-            // Sequence: Up, Up, Down, Down, Left, Right, Left, Right, B, A
-            const konamiCodeSequence = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
-            let konamiCodePosition = 0;
-
-            document.addEventListener('keydown', (event) => {
-                const requiredKey = konamiCodeSequence[konamiCodePosition];
-                if (event.key.toLowerCase() === requiredKey.toLowerCase()) {
-                    konamiCodePosition++;
-                    if (konamiCodePosition === konamiCodeSequence.length) {
-                        console.log('Konami Code Activated! Switching theme.');
-                        cycleTheme();
-                        konamiCodePosition = 0; // Reset
-                    }
-                } else {
-                    konamiCodePosition = 0; // Reset on wrong key
-                }
+                // 重新应用之前选定的同一个随机主题，以获取正确的亮/暗变体
+                applyTheme(currentRandomTheme);
             });
         })();
     </script>

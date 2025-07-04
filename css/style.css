@@ -1,11 +1,10 @@
 /*
- * M3 Expressive Portfolio Stylesheet (Optimized for Theme Switching)
- * This stylesheet uses a fully tokenized, M3-compliant design system.
- * All styles are derived from CSS Custom Properties, enabling dynamic themes.
+ * M3 Expressive Portfolio Stylesheet (Multi-File Structure)
  */
 
 /* ==========================================================================
    1. FOUNDATIONS: Import All Theme Definitions
+   IMPORTANT: These rules MUST be at the very top of the file.
    ========================================================================== */
 @import url('./themes/default/light.css');
 @import url('./themes/default/dark.css');
@@ -277,9 +276,6 @@ html[data-theme$='-dark'] .m3-navigation-bar {
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    transition: box-shadow var(--m3-duration-medium) var(--m3-easing-emphasized),
-                transform var(--m3-duration-medium) var(--m3-easing-emphasized),
-                background-color var(--m3-duration-short) var(--m3-easing-emphasized);
 }
 .m3-card-elevated:hover {
     box-shadow: var(--m3-elevation-level2);
@@ -353,36 +349,3 @@ html[data-theme$='-dark'] .m3-navigation-bar {
 }
 .project-grid .m3-card-elevated.reveal-on-scroll:nth-child(2) { transition-delay: 0.1s; }
 .project-grid .m3-card-elevated.reveal-on-scroll:nth-child(3) { transition-delay: 0.2s; }
-
-/* ==========================================================================
-   7. THEME SWITCHER COMPONENT (FAB)
-   ========================================================================== */
-.theme-switcher {
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
-    width: 56px;
-    height: 56px;
-    border-radius: var(--md-sys-shape-corner-large);
-    background-color: var(--md-sys-color-tertiary-container);
-    color: var(--md-sys-color-on-tertiary-container);
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: var(--m3-elevation-level3);
-    z-index: 999;
-    /* Re-add transition here as it was overridden by the universal selector */
-    transition: transform 0.2s var(--m3-easing-emphasized), 
-                box-shadow 0.2s var(--m3-easing-emphasized),
-                background-color var(--m3-duration-medium) var(--m3-easing-emphasized),
-                color var(--m3-duration-medium) var(--m3-easing-emphasized);
-}
-.theme-switcher:hover {
-    transform: scale(1.05);
-    box-shadow: var(--m3-elevation-level3);
-}
-.theme-switcher:active {
-    transform: scale(0.95);
-}
