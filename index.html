@@ -1,16 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Steve Wang - ECE Student & Tech Enthusiast</title>
     
-    <link rel="stylesheet" href="style.css">
+    <!-- CSS Stylesheet -->
+    <link rel="stylesheet" href="css/style.css">
     
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0" />
 </head>
 <body>
 
@@ -39,7 +41,7 @@
             <div class="project-grid">
                 
                 <article class="m3-card-elevated reveal-on-scroll">
-                    <img src="./assets/swiss-clock.gif" alt="Swiss Railway Clock Project Screenshot" class="card-media">
+                    <img src="./assets/swiss-clock.gif" alt="Swiss Railway Clock Project Screenshot" class="card-media" onerror="this.onerror=null;this.src='https://placehold.co/600x400/E6E0E9/49454F?text=Project+Image';">
                     <div class="card-content">
                         <h3 class="m3-title-large">Swiss Railway Clock</h3>
                         <p class="m3-body-large">A iOS 6 built-in clock mokeup by the classic Mondaine design. Featuring dynamic apperance. All assets were hand-drawn in Figma, has SwiftUI & Objective-C 2 versions, including the famous "stop2go" feature.</p>
@@ -50,7 +52,7 @@
                 </article>
 
                 <article class="m3-card-elevated reveal-on-scroll">
-                    <img src="./assets/imac-teardown.jpeg" alt="iMac hardware upgrade project" class="card-media">
+                    <img src="./assets/imac-teardown.jpeg" alt="iMac hardware upgrade project" class="card-media" onerror="this.onerror=null;this.src='https://placehold.co/600x400/E6E0E9/49454F?text=Project+Image';">
                     <div class="card-content">
                         <h3 class="m3-title-large">Project: iMac 2019 revival</h3>
                         <p class="m3-body-large">A comprehensive hardware overhaul of a classic Intel 2019 iMac. The project involved a full teardown to upgrade the CPU, screen, RAM, and SSD, bringing it back to life for modern-day use.</p>
@@ -61,7 +63,7 @@
                 </article>
                 
                 <article class="m3-card-elevated reveal-on-scroll">
-                     <img src="./assets/hackohio.png" alt="HackOH/IO Website Screenshot" class="card-media">
+                     <img src="./assets/hackohio.png" alt="HackOH/IO Website Screenshot" class="card-media" onerror="this.onerror=null;this.src='https://placehold.co/600x400/E6E0E9/49454F?text=Project+Image';">
                      <div class="card-content">
                         <h3 class="m3-title-large">HackOH/IO Website Maintenance</h3>
                         <p class="m3-body-large">As part of the web team, I used HTML and JavaScript to maintain and update the official website for Ohio State's largest hackathon, optimizing the user experience for thousands of participants.</p>
@@ -131,8 +133,13 @@
         </footer>
     </main>
      
+    <!-- Theme Switcher Floating Action Button -->
+    <button id="theme-switcher" class="theme-switcher" aria-label="切换主题">
+        <span class="material-symbols-outlined">palette</span>
+    </button>
+
     <script>
-        // --- Navigation Link Active State Script ---
+        // --- Original Script: Nav Link Active State & Scroll Animation ---
         const navLinks = document.querySelectorAll('.m3-navigation-bar a');
         const sections = document.querySelectorAll('main > *[id]');
 
@@ -140,7 +147,7 @@
             let current = 'home';
             sections.forEach(section => {
                 const sectionTop = section.offsetTop;
-                if (pageYOffset >= sectionTop - 100) { // Adjusted offset for better accuracy
+                if (pageYOffset >= sectionTop - 100) {
                     current = section.getAttribute('id');
                 }
             });
@@ -153,7 +160,6 @@
             });
         });
 
-        // --- Expressive Scroll Animation Script ---
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -166,6 +172,74 @@
 
         const elementsToReveal = document.querySelectorAll('.reveal-on-scroll');
         elementsToReveal.forEach(el => observer.observe(el));
+
+        // --- NEW: M3 Dynamic Theme Controller ---
+        (function() {
+            const themeSwitcherBtn = document.getElementById('theme-switcher');
+            if (!themeSwitcherBtn) return;
+
+            // 1. Define available themes (must match the names in CSS data-theme attributes)
+            const themes = ['default', 'ocean', 'forest'];
+            let currentThemeIndex = 0;
+
+            /**
+             * Applies a theme by setting the data-theme attribute on the <html> element.
+             * It respects the user's OS-level light/dark mode preference.
+             * @param {string} themeName - The name of the theme to apply (e.g., 'ocean').
+             */
+            function applyTheme(themeName) {
+                const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                const themeVariant = isDarkMode ? `${themeName}-dark` : `${themeName}-light`;
+                document.documentElement.setAttribute('data-theme', themeVariant);
+                localStorage.setItem('user-theme', themeName); // Save choice
+                console.log(`Theme applied: ${themeVariant}`);
+            }
+
+            /**
+             * Cycles to the next theme in the themes array.
+             */
+            function cycleTheme() {
+                currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+                const nextTheme = themes[currentThemeIndex];
+                applyTheme(nextTheme);
+            }
+
+            // 2. Initialization
+            // On page load, apply the saved theme or the first theme as default.
+            const savedTheme = localStorage.getItem('user-theme') || themes[0];
+            const initialThemeIndex = themes.indexOf(savedTheme);
+            currentThemeIndex = initialThemeIndex !== -1 ? initialThemeIndex : 0;
+            applyTheme(themes[currentThemeIndex]);
+
+            // 3. Event Listeners
+            // Button click event
+            themeSwitcherBtn.addEventListener('click', cycleTheme);
+
+            // Listen for changes in OS color scheme (light/dark mode)
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+                // Re-apply the current theme to get the correct light/dark variant
+                applyTheme(themes[currentThemeIndex]);
+            });
+
+            // 4. Easter Egg: Konami Code
+            // Sequence: Up, Up, Down, Down, Left, Right, Left, Right, B, A
+            const konamiCodeSequence = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+            let konamiCodePosition = 0;
+
+            document.addEventListener('keydown', (event) => {
+                const requiredKey = konamiCodeSequence[konamiCodePosition];
+                if (event.key.toLowerCase() === requiredKey.toLowerCase()) {
+                    konamiCodePosition++;
+                    if (konamiCodePosition === konamiCodeSequence.length) {
+                        console.log('Konami Code Activated! Switching theme.');
+                        cycleTheme();
+                        konamiCodePosition = 0; // Reset
+                    }
+                } else {
+                    konamiCodePosition = 0; // Reset on wrong key
+                }
+            });
+        })();
     </script>
 
 </body>

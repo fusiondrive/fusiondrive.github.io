@@ -1,13 +1,22 @@
 /*
- * M3 Expressive Portfolio Stylesheet (Optimized)
- * This stylesheet implements a fully tokenized, M3-compliant design system.
- * All styles are derived from a single source of truth: the M3 system tokens.
+ * M3 Expressive Portfolio Stylesheet (Optimized for Theme Switching)
+ * This stylesheet uses a fully tokenized, M3-compliant design system.
+ * All styles are derived from CSS Custom Properties, enabling dynamic themes.
  */
 
 /* ==========================================================================
-   1. FOUNDATIONS: M3 System Tokens (Single Source of Truth)
+   1. FOUNDATIONS: Import All Theme Definitions
    ========================================================================== */
+@import url('./themes/default/light.css');
+@import url('./themes/default/dark.css');
+@import url('./themes/ocean/light.css');
+@import url('./themes/ocean/dark.css');
+@import url('./themes/forest/light.css');
+@import url('./themes/forest/dark.css');
 
+/* ==========================================================================
+   2. FOUNDATIONS: M3 Non-Color System Tokens
+   ========================================================================== */
 :root {
     /* M3 Motion Tokens */
     --m3-easing-emphasized: cubic-bezier(0.2, 0.0, 0.0, 1.0);
@@ -33,42 +42,11 @@
     --m3-state-layer-opacity-hover: 0.08;
     --m3-state-layer-opacity-focus: 0.12;
     --m3-state-layer-opacity-pressed: 0.12;
-
-    /* M3 Color Tokens: Light Theme (Generated from source #6750A4) */
-    --md-sys-color-primary: #6750A4;
-    --md-sys-color-on-primary: #FFFFFF;
-    --md-sys-color-primary-container: #EADDFF;
-    --md-sys-color-on-primary-container: #21005D;
-    --md-sys-color-secondary: #625B71;
-    --md-sys-color-on-secondary: #FFFFFF;
-    --md-sys-color-secondary-container: #E8DEF8;
-    --md-sys-color-on-secondary-container: #1D192B;
-    --md-sys-color-tertiary: #7D5260;
-    --md-sys-color-on-tertiary: #FFFFFF;
-    --md-sys-color-tertiary-container: #FFD8E4;
-    --md-sys-color-on-tertiary-container: #31111D;
-    --md-sys-color-error: #B3261E;
-    --md-sys-color-on-error: #FFFFFF;
-    --md-sys-color-error-container: #F9DEDC;
-    --md-sys-color-on-error-container: #410E0B;
-    --md-sys-color-background: #FFFBFE;
-    --md-sys-color-on-background: #1C1B1F;
-    --md-sys-color-surface: #FFFBFE;
-    --md-sys-color-on-surface: #1C1B1F;
-    --md-sys-color-surface-variant: #E7E0EC;
-    --md-sys-color-on-surface-variant: #49454F;
-    --md-sys-color-outline: #79747E;
-    --md-sys-color-outline-variant: #CAC4D0;
-    --md-sys-color-shadow: #000000;
-    --md-sys-color-surface-container-lowest: #FFFFFF;
-    --md-sys-color-surface-container-low: #F7F2FA;
-    --md-sys-color-surface-container: #F3EDF7;
-    --md-sys-color-surface-container-high: #ECE6F0;
-    --md-sys-color-surface-container-highest: #E6E0E9;
 }
 
+
 /* ==========================================================================
-   2. GLOBAL STYLES & TYPOGRAPHY
+   3. GLOBAL STYLES & TYPOGRAPHY
    ========================================================================== */
 
 html {
@@ -80,11 +58,17 @@ body {
     margin: 0;
     background-color: var(--md-sys-color-background);
     color: var(--md-sys-color-on-background);
-    transition: background-color var(--m3-duration-short) var(--m3-easing-emphasized), 
-                color var(--m3-duration-short) var(--m3-easing-emphasized);
 }
 
-/* M3 Type Scale: Utility classes for semantic HTML styling */
+/* Universal transition for smooth theme changes */
+* {
+    transition: background-color var(--m3-duration-medium) var(--m3-easing-emphasized), 
+                color var(--m3-duration-medium) var(--m3-easing-emphasized),
+                border-color var(--m3-duration-medium) var(--m3-easing-emphasized),
+                fill var(--m3-duration-medium) var(--m3-easing-emphasized);
+}
+
+/* M3 Type Scale */
 .m3-display-large   { font-weight: 400; font-size: 57px; line-height: 64px; letter-spacing: -0.25px; }
 .m3-display-medium  { font-weight: 400; font-size: 45px; line-height: 52px; }
 .m3-display-small   { font-weight: 400; font-size: 36px; line-height: 44px; }
@@ -102,20 +86,20 @@ body {
 .m3-label-small     { font-weight: 500; font-size: 11px; line-height: 16px; letter-spacing: 0.5px; }
 
 /* ==========================================================================
-   3. LAYOUT: Main container and sections based on 8dp grid
+   4. LAYOUT
    ========================================================================== */
 main {
     display: block;
     width: 100%;
     max-width: 900px;
     margin: 0 auto;
-    padding: 0 16px; /* Default margin for compact screens */
+    padding: 0 16px;
     box-sizing: border-box;
 }
 
 @media (min-width: 600px) {
     main {
-        padding: 0 24px; /* Wider margin for medium screens and up */
+        padding: 0 24px;
     }
 }
 
@@ -142,7 +126,7 @@ main {
 footer p { margin-bottom: 24px; }
 
 /* ==========================================================================
-   4. COMPONENTS: M3-compliant implementations using tokens
+   5. COMPONENTS
    ========================================================================== */
 
 /* --- Navigation Bar --- */
@@ -159,7 +143,10 @@ footer p { margin-bottom: 24px; }
     background-color: var(--md-sys-color-surface-container);
     border-radius: var(--md-sys-shape-corner-full);
     box-shadow: var(--m3-elevation-level2);
-    transition: background-color var(--m3-duration-short) var(--m3-easing-emphasized);
+}
+
+html[data-theme$='-dark'] .m3-navigation-bar {
+    box-shadow: var(--m3-elevation-level0);
 }
 
 .m3-navigation-bar ul {
@@ -178,10 +165,6 @@ footer p { margin-bottom: 24px; }
     color: var(--md-sys-color-on-surface-variant);
     display: block;
     border-radius: var(--md-sys-shape-corner-full);
-    transition: color var(--m3-duration-short) var(--m3-easing-emphasized);
-}
-.m3-navigation-bar a {
-    /* Apply Label Large typography */
     font-weight: 500;
     font-size: 14px;
     line-height: 20px;
@@ -194,8 +177,8 @@ footer p { margin-bottom: 24px; }
     inset: 0;
     background-color: var(--md-sys-color-on-surface);
     opacity: 0;
-    transition: opacity var(--m3-duration-short) var(--m3-easing-emphasized);
     z-index: 0;
+    transition: opacity var(--m3-duration-short) var(--m3-easing-emphasized);
 }
 
 .m3-navigation-bar a:hover::before { opacity: var(--m3-state-layer-opacity-hover); }
@@ -206,11 +189,9 @@ footer p { margin-bottom: 24px; }
     background-color: var(--md-sys-color-secondary-container);
     color: var(--md-sys-color-on-secondary-container);
     font-weight: 700;
-    transition: background-color var(--m3-duration-short) var(--m3-easing-emphasized),
-                color var(--m3-duration-short) var(--m3-easing-emphasized);
 }
 
-/* --- Buttons (Base, Filled, Outlined, Text, Icon) --- */
+/* --- Buttons --- */
 .m3-button {
     display: inline-flex;
     align-items: center;
@@ -225,9 +206,6 @@ footer p { margin-bottom: 24px; }
     user-select: none;
     position: relative;
     overflow: hidden;
-    transition: box-shadow var(--m3-duration-short) var(--m3-easing-emphasized),
-                background-color var(--m3-duration-short) var(--m3-easing-emphasized);
-    /* Apply Label Large typography */
     font-weight: 500;
     font-size: 14px;
     line-height: 20px;
@@ -239,8 +217,8 @@ footer p { margin-bottom: 24px; }
     position: absolute;
     inset: 0;
     opacity: 0;
-    transition: opacity var(--m3-duration-short) var(--m3-easing-emphasized);
     z-index: 0;
+    transition: opacity var(--m3-duration-short) var(--m3-easing-emphasized);
 }
 .m3-button:hover::before { opacity: var(--m3-state-layer-opacity-hover); }
 .m3-button:focus::before { opacity: var(--m3-state-layer-opacity-focus); }
@@ -248,7 +226,6 @@ footer p { margin-bottom: 24px; }
 
 .cta-container { margin-top: 32px; display: flex; gap: 12px; }
 
-/* Filled Button */
 .m3-button-filled {
     background-color: var(--md-sys-color-primary);
     color: var(--md-sys-color-on-primary);
@@ -256,16 +233,14 @@ footer p { margin-bottom: 24px; }
 }
 .m3-button-filled::before { background-color: var(--md-sys-color-on-primary); }
 
-/* Outlined Button */
 .m3-button-outlined {
     background-color: transparent;
     color: var(--md-sys-color-primary);
     border: 1px solid var(--md-sys-color-outline);
-    padding: 0 23px; /* Adjust for border */
+    padding: 0 23px;
 }
 .m3-button-outlined::before { background-color: var(--md-sys-color-primary); }
 
-/* Text Button */
 .m3-button-text {
     background-color: transparent;
     color: var(--md-sys-color-primary);
@@ -273,7 +248,6 @@ footer p { margin-bottom: 24px; }
 }
 .m3-button-text::before { background-color: var(--md-sys-color-primary); }
 
-/* Icon Button */
 .m3-icon-button {
     width: 40px;
     height: 40px;
@@ -289,7 +263,7 @@ footer p { margin-bottom: 24px; }
     fill: currentColor;
 }
 
-/* --- Cards (Elevated) --- */
+/* --- Cards --- */
 .project-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -304,7 +278,8 @@ footer p { margin-bottom: 24px; }
     flex-direction: column;
     overflow: hidden;
     transition: box-shadow var(--m3-duration-medium) var(--m3-easing-emphasized),
-                transform var(--m3-duration-medium) var(--m3-easing-emphasized);
+                transform var(--m3-duration-medium) var(--m3-easing-emphasized),
+                background-color var(--m3-duration-short) var(--m3-easing-emphasized);
 }
 .m3-card-elevated:hover {
     box-shadow: var(--m3-elevation-level2);
@@ -346,7 +321,6 @@ footer p { margin-bottom: 24px; }
     color: var(--md-sys-color-on-secondary-container);
     border-radius: var(--md-sys-shape-corner-small);
     box-sizing: border-box;
-    /* Apply Label Large typography */
     font-weight: 500;
     font-size: 14px;
     line-height: 20px;
@@ -357,7 +331,7 @@ footer p { margin-bottom: 24px; }
 .icon-button-group { margin-top: 16px; display: flex; gap: 12px; }
 
 /* ==========================================================================
-   5. ANIMATIONS
+   6. ANIMATIONS
    ========================================================================== */
 @keyframes fadeInSlideUp {
     from { opacity: 0; transform: translateY(20px); }
@@ -366,7 +340,7 @@ footer p { margin-bottom: 24px; }
 
 .hero-section h1 { animation: fadeInSlideUp 0.8s 0.1s both var(--m3-easing-emphasized); }
 .hero-section p { animation: fadeInSlideUp 0.8s 0.2s both var(--m3-easing-emphasized); }
-.hero-section.cta-container { animation: fadeInSlideUp 0.8s 0.3s both var(--m3-easing-emphasized); }
+.hero-section .cta-container { animation: fadeInSlideUp 0.8s 0.3s both var(--m3-easing-emphasized); }
 
 .reveal-on-scroll {
     opacity: 0;
@@ -377,50 +351,38 @@ footer p { margin-bottom: 24px; }
     opacity: 1;
     transform: translateY(0);
 }
-/* Stagger card animations */
-.project-grid.reveal-on-scroll:nth-child(2) { transition-delay: 0.1s; }
-.project-grid.reveal-on-scroll:nth-child(3) { transition-delay: 0.2s; }
+.project-grid .m3-card-elevated.reveal-on-scroll:nth-child(2) { transition-delay: 0.1s; }
+.project-grid .m3-card-elevated.reveal-on-scroll:nth-child(3) { transition-delay: 0.2s; }
 
 /* ==========================================================================
-   6. DARK MODE THEME (via Token Overrides)
+   7. THEME SWITCHER COMPONENT (FAB)
    ========================================================================== */
-@media (prefers-color-scheme: dark) {
-    :root {
-        /* M3 Color Tokens: Dark Theme Overrides */
-        --md-sys-color-primary: #D0BCFF;
-        --md-sys-color-on-primary: #381E72;
-        --md-sys-color-primary-container: #4F378B;
-        --md-sys-color-on-primary-container: #EADDFF;
-        --md-sys-color-secondary: #CCC2DC;
-        --md-sys-color-on-secondary: #332D41;
-        --md-sys-color-secondary-container: #4A4458;
-        --md-sys-color-on-secondary-container: #E8DEF8;
-        --md-sys-color-tertiary: #EFB8C8;
-        --md-sys-color-on-tertiary: #492532;
-        --md-sys-color-tertiary-container: #633B48;
-        --md-sys-color-on-tertiary-container: #FFD8E4;
-        --md-sys-color-error: #F2B8B5;
-        --md-sys-color-on-error: #601410;
-        --md-sys-color-error-container: #8C1D18;
-        --md-sys-color-on-error-container: #F9DEDC;
-        --md-sys-color-background: #1C1B1F;
-        --md-sys-color-on-background: #E6E1E5;
-        --md-sys-color-surface: #1C1B1F;
-        --md-sys-color-on-surface: #E6E1E5;
-        --md-sys-color-surface-variant: #49454F;
-        --md-sys-color-on-surface-variant: #CAC4D0;
-        --md-sys-color-outline: #938F99;
-        --md-sys-color-outline-variant: #49454F;
-        --md-sys-color-shadow: #000000;
-        --md-sys-color-surface-container-lowest: #0F0D13;
-        --md-sys-color-surface-container-low: #1D1B20;
-        --md-sys-color-surface-container: #211F26;
-        --md-sys-color-surface-container-high: #2B2930;
-        --md-sys-color-surface-container-highest: #36343B;
-    }
-
-    /* In dark mode, navigation bar has no shadow for a flatter appearance */
-   .m3-navigation-bar {
-        box-shadow: var(--m3-elevation-level0);
-    }
+.theme-switcher {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 56px;
+    height: 56px;
+    border-radius: var(--md-sys-shape-corner-large);
+    background-color: var(--md-sys-color-tertiary-container);
+    color: var(--md-sys-color-on-tertiary-container);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--m3-elevation-level3);
+    z-index: 999;
+    /* Re-add transition here as it was overridden by the universal selector */
+    transition: transform 0.2s var(--m3-easing-emphasized), 
+                box-shadow 0.2s var(--m3-easing-emphasized),
+                background-color var(--m3-duration-medium) var(--m3-easing-emphasized),
+                color var(--m3-duration-medium) var(--m3-easing-emphasized);
+}
+.theme-switcher:hover {
+    transform: scale(1.05);
+    box-shadow: var(--m3-elevation-level3);
+}
+.theme-switcher:active {
+    transform: scale(0.95);
 }
