@@ -4,7 +4,6 @@
 
 /* ==========================================================================
    1. FOUNDATIONS: Import All Theme Definitions
-   IMPORTANT: These rules MUST be at the very top of the file.
    ========================================================================== */
 @import url('./themes/default/light.css');
 @import url('./themes/default/dark.css');
@@ -38,6 +37,8 @@
     --m3-elevation-level1: 0px 1px 2px rgba(0, 0, 0, 0.3), 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
     --m3-elevation-level2: 0px 1px 2px rgba(0, 0, 0, 0.3), 0px 2px 6px 2px rgba(0, 0, 0, 0.15);
     --m3-elevation-level3: 0px 4px 4px rgba(0, 0, 0, 0.3), 0px 8px 12px 6px rgba(0, 0, 0, 0.15);
+    --m3-elevation-level4: 0px 6px 10px rgba(0, 0, 0, 0.3), 0px 10px 18px 8px rgba(0, 0, 0, 0.15);
+
 
     /* M3 State Layer Opacity Tokens */
     --m3-state-layer-opacity-hover: 0.08;
@@ -146,7 +147,7 @@ footer p { margin-bottom: 24px; }
     box-shadow: var(--m3-elevation-level2);
 }
 
-html[data-theme$='-dark'] .m3-navigation-bar {
+html[data-theme$='-dark'].m3-navigation-bar {
     box-shadow: var(--m3-elevation-level0);
 }
 
@@ -271,17 +272,37 @@ html[data-theme$='-dark'] .m3-navigation-bar {
     gap: 24px;
 }
 
-.m3-card-elevated {
+.m3-card {
     background-color: var(--md-sys-color-surface-container-low);
     border-radius: var(--md-sys-shape-corner-medium);
     box-shadow: var(--m3-elevation-level1);
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    transition: box-shadow var(--m3-duration-short) ease-out, transform var(--m3-duration-short) ease-out;
+    text-decoration: none;
 }
-.m3-card-elevated:hover {
+.m3-card:hover {
     box-shadow: var(--m3-elevation-level2);
     transform: translateY(-4px);
+}
+
+.m3-card.is-link {
+    position: relative;
+}
+
+.m3-card.is-link::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-color: var(--md-sys-color-on-surface);
+    opacity: 0;
+    transition: opacity var(--m3-duration-short) ease-out;
+    z-index: 1; /* Ensure state layer is above content */
+}
+
+.m3-card.is-link:hover::before {
+    opacity: var(--m3-state-layer-opacity-hover);
 }
 
 .card-media {
@@ -294,10 +315,21 @@ html[data-theme$='-dark'] .m3-navigation-bar {
 
 .card-content {
     padding: 16px;
-    flex-grow: 1;
+    flex-grow: 1; /* Pushes actions to the bottom */
 }
-.card-content h3 { margin-bottom: 8px; color: var(--md-sys-color-on-surface); }
-.card-content p { color: var(--md-sys-color-on-surface-variant); }
+.card-content.card-metadata-chip {
+    color: var(--md-sys-color-on-surface-variant);
+    margin-bottom: 8px;
+    display: block;
+}
+.card-content h3 { 
+    margin-bottom: 8px; 
+    color: var(--md-sys-color-on-surface); 
+}
+.card-content p { 
+    color: var(--md-sys-color-on-surface-variant); 
+    margin: 0;
+}
 
 .card-actions {
     padding: 8px 16px;
@@ -328,6 +360,36 @@ html[data-theme$='-dark'] .m3-navigation-bar {
 /* --- Icon Button Group --- */
 .icon-button-group { margin-top: 16px; display: flex; gap: 12px; }
 
+/* --- Floating Action Button (FAB) --- */
+.m3-fab {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 100;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    background-color: var(--md-sys-color-primary-container);
+    color: var(--md-sys-color-on-primary-container);
+    border-radius: var(--md-sys-shape-corner-large);
+    box-shadow: var(--m3-elevation-level3);
+    text-decoration: none;
+    user-select: none;
+    transition: transform 300ms var(--m3-easing-emphasized), opacity 300ms var(--m3-easing-emphasized);
+}
+
+.m3-fab:hover {
+    box-shadow: var(--m3-elevation-level4);
+}
+
+.m3-fab--hidden {
+    opacity: 0;
+    transform: scale(0.8);
+    pointer-events: none;
+}
+
 /* ==========================================================================
    6. ANIMATIONS
    ========================================================================== */
@@ -338,7 +400,7 @@ html[data-theme$='-dark'] .m3-navigation-bar {
 
 .hero-section h1 { animation: fadeInSlideUp 0.8s 0.1s both var(--m3-easing-emphasized); }
 .hero-section p { animation: fadeInSlideUp 0.8s 0.2s both var(--m3-easing-emphasized); }
-.hero-section .cta-container { animation: fadeInSlideUp 0.8s 0.3s both var(--m3-easing-emphasized); }
+.hero-section.cta-container { animation: fadeInSlideUp 0.8s 0.3s both var(--m3-easing-emphasized); }
 
 .reveal-on-scroll {
     opacity: 0;
@@ -349,5 +411,5 @@ html[data-theme$='-dark'] .m3-navigation-bar {
     opacity: 1;
     transform: translateY(0);
 }
-.project-grid .m3-card-elevated.reveal-on-scroll:nth-child(2) { transition-delay: 0.1s; }
-.project-grid .m3-card-elevated.reveal-on-scroll:nth-child(3) { transition-delay: 0.2s; }
+.project-grid.m3-card:nth-child(2) { transition-delay: 0.1s; }
+.project-grid.m3-card:nth-child(3) { transition-delay: 0.2s; }

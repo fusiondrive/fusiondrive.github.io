@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project: iMac 2019 Revival - Steve Wang</title>
+    
+    <link rel="stylesheet" href="css/style.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0" />
+
+    <style>
+        /* Styles specific to the article page */
+       .article-header {
+            padding: 120px 0 40px 0; /* Increased top padding to avoid nav overlap */
+            border-bottom: 1px solid var(--md-sys-color-outline-variant);
+            margin-bottom: 40px;
+        }
+       .article-header.m3-headline-small {
+            color: var(--md-sys-color-on-surface-variant);
+            margin-top: 8px;
+        }
+       .article-body p {
+            margin-bottom: 1.5em;
+            color: var(--md-sys-color-on-surface);
+        }
+       .article-body h2 {
+            margin-top: 2em;
+            margin-bottom: 1em;
+        }
+       .article-image {
+            width: 100%;
+            height: auto;
+            border-radius: var(--md-sys-shape-corner-large);
+            margin: 2em 0;
+            background-color: var(--md-sys-color-surface-container-highest);
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="m3-navigation-bar">
+        <ul>
+            <li><a href="index.html#home">Home</a></li>
+            <li><a href="index.html#projects" class="active">Projects</a></li>
+            <li><a href="index.html#skills">Skills</a></li>
+            <li><a href="index.html#connect">Connect</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <header class="article-header">
+            <h1 class="m3-display-medium">My iMac Classic Project</h1>
+            <p class="m3-headline-small">How a $150 eBay Gamble Became an M1-Beating Powerhouse</p>
+        </header>
+
+        <article id="article-top" class="article-body m3-body-large">
+            <h2 class="m3-headline-medium">The Gamble</h2>
+            <p>
+                This whole adventure started back in April 2023 with a late-night eBay scroll. I stumbled upon an auction for an iMac, listed simply as a "2012" model. With six minutes left, nobody had bid on it. The seller's photos were vague, and since it wasn't online, there was no "About This Mac" info. But I spotted something they missed: the USB-C ports on the back. A quick check of the serial number confirmed my suspicion. This wasn't a 2012 machine; it was a 2019 21.5-inch iMac 4K. For $150—less than the price of a decent 4K monitor at the time—I couldn't resist. I placed my bid and won. I decided to call it the "iMac Classic," a nod to the last of its kind, much like the iPod Classic.
+            </p>
+
+            <img src="./assets/ebay.png" alt="The newly arrived 2019 iMac" class="article-image">
+
+            <p>
+                A week later, a giant box arrived at my student dorm's front desk. The iMac was in perfect condition, but turning it on was a painful experience. It took over three minutes to boot. Opening System Settings felt like watching a slideshow as the icons slowly loaded. The culprit was obvious: a 1TB 5400rpm mechanical hard drive. In 2019, Apple put a hard drive from a bygone era into a 4K machine, and it was strangling the computer's performance. It was so slow, I completely understood why the seller thought it was from 2012. This single, awful component was my opportunity. A plan began to form.
+            </p>
+
+            <h2 class="m3-headline-medium">The Parts-Sourcing Mission</h2>
+            <p>
+                My summer trip to China became a parts-sourcing mission. The first priority was the hard drive. I knew this iMac model didn't have a slot for a super-fast NVMe SSD, so I was limited to a SATA replacement. I ended up finding a great deal on a 960GB Kioxia TC10 SSD for about 280 RMB (around $40). If you haven't heard of Kioxia, they're basically the company that used to be Toshiba's memory division—the inventors of the tech, so I knew it was a solid choice.
+            </p>
+            <p>
+                Next up was the RAM. The stock 8GB just wasn't going to cut it. I hopped on Xianyu, China's massive second-hand marketplace, and found two 16GB sticks of SK Hynix RAM, which is the same brand Apple often uses. The price was almost too good to be true, and honestly, they looked a bit sketchy. The circuit boards were a rough-looking black, not the polished finish you'd expect. I took the gamble, and for the past two years, they've worked perfectly without a single issue.
+            </p>
+            <p>
+                The final piece of the puzzle was the CPU. The stock i3-8100 was okay, but I wanted more. I knew the motherboard could handle both 8th and 9th generation Intel chips, so I started looking at options like the i7-8700 or even an i9-9900T. But then I went down a rabbit hole and discovered engineering sample (ES) CPUs. These are pre-release chips that are often sold for a fraction of the price. I found a 9th-gen i9 sample known as "QQBZ". It had 8 cores and 16 threads, basically a slightly lower-clocked version of the retail i9-9900, and it cost me about 800 RMB (around $110). This was the heart of my new machine.
+            </p>
+
+            <img src="./assets/components.png" alt="The collection of new parts: Kioxia SSD, SK Hynix RAM, and the i9 ES CPU" class="article-image">
+
+            <h2 class="m3-headline-medium">Surgery Day</h2>
+            <p>
+                On August 20, 2023, with all my parts back in the US, it was surgery day. Getting into an iMac is a nerve-wracking process that involves using a roller tool to cut the screen's adhesive. One thing I learned the hard way: always buy the official Apple adhesive strips for reassembly. The cheap ones on eBay will fail, and you don't want a heavy glass screen falling off your desk.
+            </p>
+
+            <img src="./assets/powersource.png" alt="The iMac opened up on the workbench, showing its internal components" class="article-image">
+
+            <p>
+                Once inside, I hit my first real snag. Apple uses a tamper-evident sticker on the CPU heatsink, but the warranty was long gone, so I tore it off. The real trouble started when I tried to remove the heatsink itself. It was stuck fast. I pulled a little too hard, and the entire heatsink came off, ripping the CPU right out of its socket with it! My heart stopped. I was sure I'd destroyed the motherboard. Luckily, nothing was broken. Apple's design doesn't use the standard locking lever to hold the CPU in place, so the dried thermal paste had basically glued the two together.
+            </p>
+
+            <img src="./assets/cpubend.png" alt="The original CPU stuck to the bottom of the heatsink after being pulled from the socket" class="article-image">
+
+            <p>
+                After cleaning everything up and installing the new i9, I put it all back together for a test run. It wouldn't turn on. I had to take it apart again and discovered that the new CPU had shifted slightly in the socket, causing it to bend under the pressure of the heatsink. It took two more full teardowns and reassemblies, being extra careful to apply even pressure, before I finally heard that beautiful Apple chime. The iMac Classic was alive.
+            </p>
+
+            <h2 class="m3-headline-medium">The Rebirth and Epilogue</h2>
+            <p>
+                The difference was night and day. macOS amusingly identified the engineering sample CPU as an "8-Core Core i5," but the performance was no joke. In Geekbench, it was scoring around 7,000 in the multi-core test, putting it right on par with an M1 Mac. From a machine that could barely boot, I now had something that felt modern and incredibly fast.
+            </p>
+
+            <img src="./assets/gb6.png" alt="Screenshot of Geekbench results showing the new high performance score" class="article-image">
+
+            <p>
+                I used the iMac Classic as my daily driver for over a year. But eventually, a few quirks started to show. Sometimes, in the middle of the night, the fans would spin up to full speed for no reason while the machine was asleep. The SATA SSD, while a huge improvement, was still a bottleneck when I was working with large files, causing the system to stutter. The final straw was when I started using Onshape for 3D modeling. The stock Radeon Pro 555X GPU just couldn't keep up, and rotating models was a laggy mess.
+            </p>
+
+            <img src="./assets/m4.png" alt="Screenshot of Geekbench results showing the new high performance score" class="article-image">
+
+            <p>
+                In April 2024, with the new M4 Mac mini offering incredible value, I decided it was time to retire my project. But the story has a happy ending. I listed the fully upgraded iMac Classic on eBay, was completely transparent about all the modifications, and sold it for $350. It was the perfect end to a fun and challenging project.
+            </p>
+        </article>
+    </main>
+
+    <a href="#article-top" id="back-to-top-fab" class="m3-fab m3-fab--hidden" aria-label="Back to top">
+        <span class="material-symbols-outlined">arrow_upward</span>
+    </a>
+
+    <script>
+        // --- M3 Random Theme on Load Controller ---
+        (function() {
+            const themes = ['default', 'ocean', 'forest', 'lemon'];
+            const currentRandomTheme = themes[Math.floor(Math.random() * themes.length)];
+
+            function applyTheme(themeName) {
+                const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                const themeVariant = isDarkMode? `${themeName}-dark` : `${themeName}-light`;
+                document.documentElement.setAttribute('data-theme', themeVariant);
+                console.log(`Random theme applied: ${themeVariant}`);
+            }
+
+            applyTheme(currentRandomTheme);
+
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+                applyTheme(currentRandomTheme);
+            });
+        })();
+
+        // --- Back to Top FAB Controller ---
+        (function() {
+            const fab = document.getElementById('back-to-top-fab');
+            if (!fab) return;
+
+            const scrollThreshold = 400;
+
+            const checkVisibility = () => {
+                if (window.scrollY > scrollThreshold) {
+                    fab.classList.remove('m3-fab--hidden');
+                } else {
+                    fab.classList.add('m3-fab--hidden');
+                }
+            };
+
+            window.addEventListener('scroll', checkVisibility, { passive: true });
+            checkVisibility();
+
+            fab.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = fab.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                
+                if (targetElement) {
+                     targetElement.scrollIntoView({ behavior: 'smooth' });
+                } else {
+                     window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            });
+        })();
+    </script>
+
+</body>
+</html>

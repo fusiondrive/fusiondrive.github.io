@@ -49,4 +49,9 @@ html[data-theme='default-dark'] {
   --md-sys-color-surface-container: rgb(39 29 27);
   --md-sys-color-surface-container-high: rgb(50 40 37);
   --md-sys-color-surface-container-highest: rgb(61 50 47);
+  /* NEW: RGB values for surface tinting */
+  --md-sys-color-primary-rgb: 255, 181, 160;
+  --md-sys-color-secondary-rgb: 231, 189, 178;
+  --md-sys-color-tertiary-rgb: 216, 197, 141;
+  --md-sys-color-error-rgb: 255, 180, 171;
 }
