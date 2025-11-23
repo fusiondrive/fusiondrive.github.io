@@ -12,8 +12,11 @@ canvas.style.zIndex = '0';
 
 let width, height;
 let particles = [];
-// Initialize mouse to center so particles are visible immediately
-const mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2, isActive: true };
+// Mouse state
+const mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2, isActive: false };
+
+// Idle "Jellyfish" Target
+const idleTarget = { x: 0, y: 0 };
 
 // Configuration
 const config = {
@@ -23,7 +26,7 @@ const config = {
     // Physics
     springStiffness: 0.005, // Extremely soft spring for "jellyfish" feel
     friction: 0.90,        // Lower friction for floaty feel
-    repulsionRadius: 450,  // Larger interaction area
+    repulsionRadius: 200,  // Smaller interaction area (was 450)
     repulsionStrength: 1.5, // Softer repulsion
 
     // Visuals
@@ -34,9 +37,9 @@ const config = {
     breatheSpeed: 0.001,
     breatheAmplitude: 20,
 
-    // Fallback colors in case theme variables aren't ready
-    colorPrimary: '#1a4d2e',
-    colorSecondary: '#4f8f5e'
+    // Darker Fallback colors
+    colorPrimary: '#0d2617',   // Darker green
+    colorSecondary: '#27472f'  // Darker secondary
 };
 
 class Particle {
@@ -50,11 +53,11 @@ class Particle {
         this.angle = 0;
         this.targetAngle = 0;
         this.color = Math.random() > 0.5 ? config.colorPrimary : config.colorSecondary;
-        this.opacity = 0.2; // Start with visible opacity
+        this.opacity = 0; // Start with visible opacity
         this.phase = Math.random() * Math.PI * 2; // Random phase for breathing
     }
 
-    update(time) {
+    update(time, target, isIdle) {
         // 1. Physics (Spring + Repulsion + Breathing)
 
         // Calculate "Home" with breathing offset
@@ -71,19 +74,17 @@ class Particle {
         this.vx += dx * config.springStiffness;
         this.vy += dy * config.springStiffness;
 
-        // Repulsion from mouse
-        if (mouse.isActive) {
-            const mdx = this.x - mouse.x;
-            const mdy = this.y - mouse.y;
-            const dist = Math.sqrt(mdx * mdx + mdy * mdy);
+        // Repulsion from target (mouse or idle ghost)
+        const mdx = this.x - target.x;
+        const mdy = this.y - target.y;
+        const dist = Math.sqrt(mdx * mdx + mdy * mdy);
 
-            if (dist < config.repulsionRadius) {
-                const force = (1 - dist / config.repulsionRadius) * config.repulsionStrength;
-                const angle = Math.atan2(mdy, mdx);
+        if (dist < config.repulsionRadius) {
+            const force = (1 - dist / config.repulsionRadius) * config.repulsionStrength;
+            const angle = Math.atan2(mdy, mdx);
 
-                this.vx += Math.cos(angle) * force * 5;
-                this.vy += Math.sin(angle) * force * 5;
-            }
+            this.vx += Math.cos(angle) * force * 5;
+            this.vy += Math.sin(angle) * force * 5;
         }
 
         // Apply friction
@@ -95,11 +96,7 @@ class Particle {
         this.y += this.vy;
 
         // 2. Rotation (Compass Effect)
-        if (mouse.isActive) {
-            const mdx = mouse.x - this.x;
-            const mdy = mouse.y - this.y;
-            this.targetAngle = Math.atan2(mdy, mdx);
-        }
+        this.targetAngle = Math.atan2(mdy, mdx);
 
         // Smooth rotation
         let diff = this.targetAngle - this.angle;
@@ -108,21 +105,15 @@ class Particle {
 
         this.angle += diff * config.rotationSpeed;
 
-        // 3. Visibility (Flashlight Effect)
-        // Base opacity is 0.1 (always visible), increases to 1 near mouse
-        let targetOpacity = 0.1;
+        // 3. Visibility (Spotlight)
+        // Only visible near the target
+        let targetOpacity = 0;
 
-        if (mouse.isActive) {
-            const mdx = this.x - mouse.x;
-            const mdy = this.y - mouse.y;
-            const dist = Math.sqrt(mdx * mdx + mdy * mdy);
-
-            if (dist < config.visibilityRadius) {
-                // Calculate spotlight intensity
-                const spotlight = 1 - (dist / config.visibilityRadius);
-                // Add to base opacity
-                targetOpacity = 0.1 + Math.pow(spotlight, 3) * 0.9;
-            }
+        if (dist < config.visibilityRadius) {
+            // Calculate spotlight intensity
+            const spotlight = 1 - (dist / config.visibilityRadius);
+            // Cubic falloff for sharp spotlight
+            targetOpacity = Math.pow(spotlight, 3);
         }
 
         // Smooth opacity transition
@@ -158,12 +149,9 @@ function getThemeColors() {
     particles.forEach(p => {
         p.color = Math.random() > 0.5 ? config.colorPrimary : config.colorSecondary;
     });
-
-    console.log('Theme colors loaded:', config.colorPrimary, config.colorSecondary);
 }
 
 function init() {
-    console.log('Grass initialized');
     resize();
     // Fetch colors immediately
     getThemeColors();
@@ -202,13 +190,21 @@ function createParticles() {
 function animate(time) {
     ctx.clearRect(0, 0, width, height);
 
-    // Debug: Draw text to confirm canvas is working and visible
-    // ctx.fillStyle = 'red';
-    // ctx.font = '20px Arial';
-    // ctx.fillText(`Particles: ${particles.length} | Mouse: ${Math.round(mouse.x)}, ${Math.round(mouse.y)}`, 20, 30);
+    // Determine target (Mouse or Idle Ghost)
+    let target = mouse;
+    let isIdle = !mouse.isActive;
+
+    if (isIdle) {
+        // "Jellyfish" wandering logic
+        // Smooth sine wave motion for the idle spotlight
+        const t = time * 0.0005;
+        idleTarget.x = width / 2 + Math.cos(t) * (width * 0.3) + Math.sin(t * 2.1) * (width * 0.1);
+        idleTarget.y = height / 2 + Math.sin(t * 1.3) * (height * 0.2) + Math.cos(t * 1.7) * (height * 0.1);
+        target = idleTarget;
+    }
 
     particles.forEach(p => {
-        p.update(time || 0);
+        p.update(time || 0, target, isIdle);
         p.draw(ctx);
     });
     requestAnimationFrame(animate);
