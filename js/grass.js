@@ -7,6 +7,9 @@
 const canvas = document.getElementById('grass-canvas');
 const ctx = canvas.getContext('2d');
 
+// Force Z-Index to 0 to ensure visibility (overriding CSS -1 if needed)
+canvas.style.zIndex = '0';
+
 let width, height;
 let particles = [];
 // Initialize mouse to center so particles are visible immediately
@@ -47,7 +50,7 @@ class Particle {
         this.angle = 0;
         this.targetAngle = 0;
         this.color = Math.random() > 0.5 ? config.colorPrimary : config.colorSecondary;
-        this.opacity = 0;
+        this.opacity = 0.2; // Start with visible opacity
         this.phase = Math.random() * Math.PI * 2; // Random phase for breathing
     }
 
@@ -106,20 +109,24 @@ class Particle {
         this.angle += diff * config.rotationSpeed;
 
         // 3. Visibility (Flashlight Effect)
+        // Base opacity is 0.1 (always visible), increases to 1 near mouse
+        let targetOpacity = 0.1;
+
         if (mouse.isActive) {
             const mdx = this.x - mouse.x;
             const mdy = this.y - mouse.y;
             const dist = Math.sqrt(mdx * mdx + mdy * mdy);
 
             if (dist < config.visibilityRadius) {
-                this.opacity = 1 - (dist / config.visibilityRadius);
-                this.opacity = Math.pow(this.opacity, 3); // Steeper falloff for spotlight effect
-            } else {
-                this.opacity = 0;
+                // Calculate spotlight intensity
+                const spotlight = 1 - (dist / config.visibilityRadius);
+                // Add to base opacity
+                targetOpacity = 0.1 + Math.pow(spotlight, 3) * 0.9;
             }
-        } else {
-            this.opacity = 0;
         }
+
+        // Smooth opacity transition
+        this.opacity += (targetOpacity - this.opacity) * 0.1;
     }
 
     draw(ctx) {
@@ -194,6 +201,12 @@ function createParticles() {
 
 function animate(time) {
     ctx.clearRect(0, 0, width, height);
+
+    // Debug: Draw text to confirm canvas is working and visible
+    // ctx.fillStyle = 'red';
+    // ctx.font = '20px Arial';
+    // ctx.fillText(`Particles: ${particles.length} | Mouse: ${Math.round(mouse.x)}, ${Math.round(mouse.y)}`, 20, 30);
+
     particles.forEach(p => {
         p.update(time || 0);
         p.draw(ctx);
