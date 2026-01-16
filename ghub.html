@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Order App Simulation</title>
+    <style>
+        :root {
+            --primary-purple: #563385;
+            --primary-green: #377a42;
+            --text-main: #1a1a1a;
+            --text-secondary: #666666;
+            --bg-color: #ffffff;
+            --line-color: #f4f4f4;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: #fff;
+            color: var(--text-main);
+            width: 100%; 
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* ==============================
+           日期 & 订单号 选择器样式
+           ============================== */
+        .date-picker-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); z-index: 9999;
+            display: flex; align-items: center; justify-content: center;
+        }
+        
+        .date-picker-box {
+            background: white; width: 85%; max-width: 320px;
+            padding: 25px; border-radius: 20px; text-align: center;
+        }
+
+        .date-picker-box h3 { margin-bottom: 20px; color: var(--primary-purple); }
+        
+        .config-label {
+            display: block; text-align: left; font-size: 14px; color: #666; margin-bottom: 5px; margin-left: 2px;
+        }
+
+        .config-input {
+            width: 100%; padding: 12px; font-size: 16px;
+            border: 2px solid #eee; border-radius: 10px; margin-bottom: 15px;
+            font-family: inherit;
+        }
+
+        .confirm-btn {
+            background: var(--primary-purple); color: white;
+            border: none; padding: 12px 30px; border-radius: 25px;
+            font-size: 16px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px;
+        }
+
+        /* ==============================
+           通用样式 & 动画类
+           ============================== */
+        .page-container {
+            position: absolute; top: 0; left: 0; width: 100%; min-height: 100vh;
+            background: #fff; transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+            z-index: 10;
+        }
+
+        #details-page { transform: translateX(100%); z-index: 200; background-color: #fff; }
+        #details-page.active { transform: translateX(0); }
+
+        .text-btn { color: var(--primary-purple); text-decoration: none; font-size: 15px; }
+
+        /* ==============================
+           Page 1: 主页 (HOME) 样式
+           ============================== */
+        .top-nav { padding: 15px 0; text-align: center; background: #fff; }
+        .nav-title { font-weight: 700; font-size: 17px; display: flex; align-items: center; justify-content: center; gap: 6px; }
+
+        .status-bar { background-color: #f2f2f2; padding: 14px 0; text-align: center; border-top: 1px solid #e5e5e5; border-bottom: 1px solid #e5e5e5; }
+        .order-id { font-weight: 900; font-size: 21px; color: #333; letter-spacing: 0.5px; text-transform: uppercase; }
+
+        .main-padding { padding: 24px; }
+        .eta-title { font-size: 15px; color: var(--text-secondary); margin-bottom: 6px; }
+        .eta-value { font-size: 24px; font-weight: 800; color: #111; margin-bottom: 25px; }
+
+        .progress-bar-area { position: relative; height: 42px; margin-bottom: 8px; }
+        .p-line { position: absolute; top: 50%; transform: translateY(-50%); height: 6px; background: var(--primary-green); border-radius: 3px; z-index: 1; left: 8px; right: 21px; }
+        .p-dot { width: 16px; height: 16px; border-radius: 50%; background: var(--primary-green); z-index: 2; position: absolute; top: 50%; }
+        .p-dot.start { left: 0; transform: translateY(-50%); }
+        .p-dot.mid { left: 50%; transform: translate(-50%, -50%); }
+        .p-check { width: 42px; height: 42px; border-radius: 50%; background: var(--primary-green); display: flex; align-items: center; justify-content: center; z-index: 2; position: absolute; right: 0; top: 50%; transform: translateY(-50%); box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .status-text { font-size: 15px; color: #111; margin-bottom: 35px; margin-left: 2px; }
+
+        .address-block { margin-bottom: 30px; }
+        .addr-label { color: var(--text-secondary); font-size: 14px; margin-bottom: 6px; }
+        .addr-row { display: flex; justify-content: space-between; align-items: baseline; }
+        .addr-main { font-weight: 700; font-size: 17px; color: #111; }
+        .link-purple { color: var(--primary-purple); font-weight: 600; font-size: 15px; text-decoration: none; }
+
+        .btn-large-outline { display: block; width: 100%; padding: 16px; border: 2px solid var(--primary-purple); border-radius: 30px; background: transparent; color: var(--primary-purple); font-weight: 700; font-size: 17px; text-align: center; margin-bottom: 24px; text-decoration: none; cursor: pointer; }
+
+        .eco-row { display: flex; gap: 12px; align-items: flex-start; }
+        /* 这里的图标路径稍后通过JS或HTML更新 */
+        .icon-recycle-img { width: 26px; height: 26px; object-fit: contain; flex-shrink: 0; margin-top: 1px; }
+        .eco-content strong { display: block; font-size: 16px; color: #333; margin-bottom: 4px; font-weight: 700; }
+        .eco-content a, .eco-content span { color: var(--primary-purple); font-size: 15px; text-decoration: none; cursor: pointer;}
+
+        /* ==============================
+           Page 2: 详情页 (DETAILS) 样式
+           ============================== */
+        .details-nav { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: #fff; border-bottom: 1px solid #f0f0f0; }
+        .nav-left, .nav-right { width: 60px; }
+        .btn-back { display: flex; align-items: center; color: var(--primary-purple); font-size: 17px; font-weight: 400; cursor: pointer; text-decoration: none; gap: 2px; }
+        .btn-back svg { width: 22px; height: 22px; fill: var(--primary-purple); margin-left: -6px;}
+        .nav-center { font-size: 17px; font-weight: 700; color: #000; }
+        .nav-right { text-align: right; }
+        .btn-help { color: var(--primary-purple); font-size: 17px; text-decoration: none; }
+
+        .details-scroll { height: calc(100vh - 50px); overflow-y: auto; padding: 20px; }
+        .restaurant-header { display: flex; gap: 15px; margin-bottom: 20px; }
+        .rest-logo-container { width: 50px; height: 50px; border: 1px solid #e0e0e0; display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; }
+        .rest-logo-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .rest-info h2 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+        .rest-info p { font-size: 14px; color: #666; margin-bottom: 8px; }
+        .rest-info .small-order { font-size: 14px; color: #333; }
+
+        .pickup-info { margin-bottom: 10px; }
+        .section-label { font-weight: 700; font-size: 15px; margin-bottom: 4px; color: #111; }
+        .time-display { font-size: 15px; color: #444; margin-bottom: 10px; }
+        .help-link-sm { display: block; margin-bottom: 20px; font-size: 15px; }
+
+        .divider-thin { height: 1px; background: #eee; margin: 15px 0 20px 0; }
+        .order-items-section h3 { font-size: 16px; font-weight: 700; margin-bottom: 15px; }
+        .order-item-row { display: flex; gap: 15px; margin-bottom: 30px; }
+        .item-qty { font-size: 16px; color: #111; width: 20px; }
+        .item-details { flex: 1; }
+        .item-name { font-size: 16px; font-weight: 400; color: #000; margin-bottom: 6px; }
+        .sub-item-list { list-style: none; padding-left: 8px; }
+        .sub-item-list li { font-size: 15px; color: #666; margin-bottom: 4px; position: relative; padding-left: 10px; }
+        .sub-item-list li::before { content: "•"; position: absolute; left: 0; color: #999; }
+        .view-receipt-link { display: block; text-align: right; color: var(--primary-purple); font-weight: 600; font-size: 15px; text-decoration: none; margin-top: 20px; }
+
+        /* ==============================
+           弹窗 & 遮罩
+           ============================== */
+        .overlay-mask { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.55); z-index: 300; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; backdrop-filter: blur(1px); }
+        .overlay-mask.active { opacity: 1; pointer-events: auto; }
+
+        .bottom-sheet { position: fixed; bottom: 0; left: 0; width: 100%; background: white; border-radius: 20px 20px 0 0; padding: 20px 24px 40px; z-index: 301; transform: translateY(100%); transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .bottom-sheet.active { transform: translateY(0); }
+
+        .sheet-header { display: grid; grid-template-columns: 24px 1fr 24px; align-items: center; margin-bottom: 25px; }
+        .sheet-title { text-align: center; font-weight: 700; font-size: 19px; }
+        .qr-placeholder { width: 200px; height: 200px; background: #eee; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; }
+        .qr-img { width: 100%; height: 100%; object-fit: contain; }
+    </style>
+</head>
+<body>
+
+    <div id="date-picker-modal" class="date-picker-overlay">
+        <div class="date-picker-box">
+            <h3>Configure Order</h3>
+            
+            <label class="config-label">Pickup Time:</label>
+            <input type="datetime-local" id="datetime-input" class="config-input">
+            
+            <label class="config-label">Order Number:</label>
+            <input type="number" id="order-num-input" class="config-input" value="197" placeholder="e.g. 197">
+            
+            <button class="confirm-btn" onclick="confirmConfig()">Confirm</button>
+        </div>
+    </div>
+
+    <div id="home-page" class="page-container">
+        
+        <div class="top-nav">
+            <div class="nav-title">
+                Your order
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#563385" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M7 10l5 5 5-5"/>
+                </svg>
+            </div>
+        </div>
+
+        <div class="status-bar">
+            <div class="order-id">ORDER #<span id="disp-order-num-1">197</span></div>
+        </div>
+
+        <div class="main-padding">
+            <div class="eta-title">Pickup ETA</div>
+            <div class="eta-value"><span id="home-eta-time">04:46PM</span> | Order is ready</div>
+
+            <div class="progress-bar-area">
+                <div class="p-line"></div>
+                <div class="p-dot start"></div>
+                <div class="p-dot mid"></div>
+                <div class="p-check">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                </div>
+            </div>
+            <div class="status-text">Ready for pickup</div>
+
+            <div class="address-block">
+                <div class="addr-label">Campus pickup at</div>
+                <div class="addr-row">
+                    <span class="addr-main">160 W Woodruff Ave</span>
+                    <a href="#" class="link-purple">Get directions</a>
+                </div>
+            </div>
+
+            <div id="btn-view-details" class="btn-large-outline">View order details</div>
+            
+            <a href="#" class="text-btn" style="display:block; margin-bottom:30px;">Need help with your order?</a>
+
+            <div class="eco-row">
+                <img src="assets/recycle.png" class="icon-recycle-img" alt="Recycle Symbol">
+                <div class="eco-content">
+                    <strong id="home-return-date">Return containers within 3 days</strong>
+                    <span><a href="#">Manage containers</a> or <a id="show-qr-trigger">show QR code</a></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="details-page" class="page-container">
+        
+        <div class="details-nav">
+            <div class="nav-left">
+                <div id="btn-back-home" class="btn-back">
+                    <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Back
+                </div>
+            </div>
+            <div class="nav-center">View order</div>
+            <div class="nav-right">
+                <a href="#" class="btn-help">Help</a>
+            </div>
+        </div>
+
+        <div class="details-scroll">
+            <div class="restaurant-header">
+                <div class="rest-logo-container">
+                    <img src="assets/logot.jpg" alt="Restaurant Logo" class="rest-logo-img">
+                </div>
+                <div class="rest-info" style="flex:1;">
+                    <h2>Traditions at Scott - Mongolian Grill</h2>
+                    <p>160 W Woodruff Ave • (614) 247-8271</p>
+                    <div class="small-order">Your order: #<span id="disp-order-num-2">197</span></div>
+                </div>
+                <div style="display:flex; align-items:center;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="pickup-info">
+                <div class="section-label">Pickup</div>
+                <div class="time-display" id="detail-pickup-time">Jan 15, 2026, 4:35 pm</div>
+            </div>
+            <a href="#" class="text-btn help-link-sm">Need help?</a>
+
+            <div class="eco-row" style="margin-bottom: 20px;">
+                <img src="assets/recycle.png" class="icon-recycle-img" alt="Recycle Symbol">
+                <div class="eco-content">
+                    <strong id="detail-return-date">Return containers by 01/18/2026</strong>
+                    <span><a href="#">Manage containers</a> or <a id="show-qr-trigger-2">show QR code</a></span>
+                </div>
+            </div>
+
+            <div class="divider-thin"></div>
+
+            <div class="order-items-section">
+                <h3>Order information</h3>
+                <div class="order-item-row">
+                    <div class="item-qty">1</div>
+                    <div class="item-details">
+                        <div class="item-name">Build Your Own Stir-Fry</div>
+                        <ul class="sub-item-list">
+                            <li>Steamed White Rice</li>
+                            <li>Napa Cabbage</li>
+                            <li>No Choice</li>
+                            <li>Ginger</li>
+                            <li>Garlic</li>
+                            <li>Beef</li>
+                            <li>Tamari</li>
+                            <li>Teriyaki</li>
+                            <li>Yes - Togo</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <a href="#" class="view-receipt-link">View receipt</a>
+            <div style="height: 50px;"></div>
+        </div>
+    </div>
+
+
+    <div id="overlay" class="overlay-mask"></div>
+
+    <div id="bottom-sheet" class="bottom-sheet">
+        <div class="sheet-header">
+            <svg id="close-qr" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="cursor:pointer">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            <div class="sheet-title">Reusable containers</div>
+            <div></div>
+        </div>
+        <div style="text-align:center; margin-bottom:25px; color:#111; font-size:16px;">
+            Show QR code to the cashier if requested.
+        </div>
+        <div class="qr-placeholder">
+            <img src="assets/qrcode.png" alt="QR Code" class="qr-img"> 
+        </div>
+        <div style="text-align:center;">
+            <div class="time-big" id="qr-time" style="font-size:28px; font-weight:700; color:#000; margin-bottom:6px;">4:35pm</div>
+            <div class="date-small" id="qr-date" style="font-size:16px; color:#444;">Thursday, Jan 15, 2026</div>
+        </div>
+    </div>
+
+
+    <script>
+        // 页面加载默认值
+        window.onload = function() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            
+            document.getElementById('datetime-input').value = `${year}-${month}-${day}T${hours}:${minutes}`;
+        };
+
+        // 确认配置（日期 + 订单号）
+        function confirmConfig() {
+            // 1. 获取输入
+            const dateInput = document.getElementById('datetime-input').value;
+            const orderInput = document.getElementById('order-num-input').value;
+
+            // 2. 更新订单号
+            if (orderInput) {
+                document.getElementById('disp-order-num-1').textContent = orderInput;
+                document.getElementById('disp-order-num-2').textContent = orderInput;
+            }
+
+            // 3. 更新时间相关
+            if(dateInput) {
+                const date = new Date(dateInput);
+                updatePageTimes(date);
+                updateReturnDate(date);
+            }
+
+            // 4. 关闭弹窗
+            document.getElementById('date-picker-modal').style.display = 'none';
+        }
+
+        function updatePageTimes(date) {
+            const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+            let hours = date.getHours();
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            const ampmSmall = hours >= 12 ? 'pm' : 'am';
+            hours = hours % 12;
+            hours = hours ? hours : 12; 
+            const strTimeBig = `${String(hours).padStart(2, '0')}:${minutes}${ampm}`;
+            const strTimeSmall = `${hours}:${minutes} ${ampmSmall}`;
+
+            const monthName = months[date.getMonth()];
+            const dayName = days[date.getDay()];
+            const dayNum = date.getDate();
+            const year = date.getFullYear();
+
+            // 更新页面各处时间
+            document.getElementById('home-eta-time').textContent = strTimeBig;
+            document.getElementById('detail-pickup-time').textContent = `${monthName} ${dayNum}, ${year}, ${strTimeSmall}`;
+            document.getElementById('qr-time').textContent = strTimeSmall.replace(' ', '');
+            document.getElementById('qr-date').textContent = `${dayName}, ${monthName} ${dayNum}, ${year}`;
+        }
+
+        function updateReturnDate(selectedDate) {
+            const returnDate = new Date(selectedDate);
+            returnDate.setMonth(returnDate.getMonth() + 1); // 一个月后
+
+            const rYear = returnDate.getFullYear();
+            const rMonth = String(returnDate.getMonth() + 1).padStart(2, '0');
+            const rDay = String(returnDate.getDate()).padStart(2, '0');
+            
+            const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            const rMonthName = months[returnDate.getMonth()];
+            
+            document.getElementById('home-return-date').textContent = `Return containers by ${rMonthName} ${rDay}, ${rYear}`;
+            document.getElementById('detail-return-date').textContent = `Return containers by ${rMonth}/${rDay}/${rYear}`;
+        }
+
+        // --- 交互逻辑 (页面跳转/弹窗) ---
+        const btnViewDetails = document.getElementById('btn-view-details');
+        const btnBackHome = document.getElementById('btn-back-home');
+        const detailsPage = document.getElementById('details-page');
+
+        btnViewDetails.addEventListener('click', () => { detailsPage.classList.add('active'); });
+        btnBackHome.addEventListener('click', () => { detailsPage.classList.remove('active'); });
+
+        const overlay = document.getElementById('overlay');
+        const bottomSheet = document.getElementById('bottom-sheet');
+        const btnCloseQr = document.getElementById('close-qr');
+        
+        const triggers = [
+            document.getElementById('show-qr-trigger'),
+            document.getElementById('show-qr-trigger-2')
+        ];
+
+        function openSheet() {
+            overlay.classList.add('active');
+            bottomSheet.classList.add('active');
+        }
+
+        function closeSheet() {
+            overlay.classList.remove('active');
+            bottomSheet.classList.remove('active');
+        }
+
+        triggers.forEach(trigger => {
+            if(trigger) {
+                trigger.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    openSheet();
+                });
+            }
+        });
+
+        btnCloseQr.addEventListener('click', closeSheet);
+        overlay.addEventListener('click', closeSheet);
+    </script>
+</body>
+</html>
