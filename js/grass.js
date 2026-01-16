@@ -24,8 +24,9 @@ const config = {
     particleRadius: 2.5, // Dots radius
 
     // Physics
-    springStiffness: 0.005, // Extremely soft spring for "jellyfish" feel
-    friction: 0.90,        // Lower friction for floaty feel
+    // Physics
+    springStiffness: 0.002, // Extremely soft spring for "jellyfish" feel
+    friction: 0.94,        // Lower friction for floaty feel
     repulsionRadius: 200,  // Smaller interaction area (was 450)
     repulsionStrength: 1.5, // Softer repulsion
 
@@ -34,20 +35,30 @@ const config = {
     visibilityRadius: 0, // Set in resize
 
     // Breathing (Jellyfish Float)
-    breatheSpeed: 0.001,
+    breatheSpeed: 0.002,
     breatheAmplitude: 20,
 
     // Darker Fallback colors
     colorPrimary: '#0d2617',   // Darker green
-    colorSecondary: '#27472f'  // Darker secondary
+    colorSecondary: '#27472f',  // Darker secondary
+
+    // Organic Randomness
+    gridRandomness: 40, // How much to deviate from the grid
+    minRadius: 1.5,
+    maxRadius: 4.0,
+
+    // Neural Mesh (Connections)
+    connectionRadius: 110, // Distance to connect particles
+    connectionOpacity: 0.15 // Max opacity of lines
 };
 
 class Particle {
-    constructor(x, y) {
+    constructor(x, y, radius) {
         this.homeX = x;
         this.homeY = y;
         this.x = x;
         this.y = y;
+        this.radius = radius; // Individual radius
         this.vx = 0;
         this.vy = 0;
         this.angle = 0;
@@ -130,7 +141,8 @@ class Particle {
         ctx.fillStyle = this.color;
 
         ctx.beginPath();
-        ctx.arc(0, 0, config.particleRadius, 0, Math.PI * 2);
+        ctx.beginPath();
+        ctx.arc(0, 0, this.radius, 0, Math.PI * 2);
         ctx.fill();
 
         ctx.restore();
@@ -179,10 +191,16 @@ function createParticles() {
 
     for (let i = 0; i < cols; i++) {
         for (let j = 0; j < rows; j++) {
-            // Strict grid, no randomness in position
-            const x = i * config.spacing + config.spacing / 2;
-            const y = j * config.spacing + config.spacing / 2;
-            particles.push(new Particle(x, y));
+            // Organic randomness: Break the grid
+            const offsetX = (Math.random() - 0.5) * config.gridRandomness;
+            const offsetY = (Math.random() - 0.5) * config.gridRandomness;
+            const x = i * config.spacing + config.spacing / 2 + offsetX;
+            const y = j * config.spacing + config.spacing / 2 + offsetY;
+
+            // Random size
+            const radius = config.minRadius + Math.random() * (config.maxRadius - config.minRadius);
+
+            particles.push(new Particle(x, y, radius));
         }
     }
 }
@@ -207,7 +225,41 @@ function animate(time) {
         p.update(time || 0, target, isIdle);
         p.draw(ctx);
     });
+
+    drawConnections();
+
     requestAnimationFrame(animate);
+}
+
+function drawConnections() {
+    ctx.strokeStyle = config.colorPrimary;
+    ctx.lineWidth = 1;
+
+    for (let i = 0; i < particles.length; i++) {
+        const p1 = particles[i];
+        if (p1.opacity <= 0.01) continue; // Don't connect invisible particles
+
+        for (let j = i + 1; j < particles.length; j++) {
+            const p2 = particles[j];
+            if (p2.opacity <= 0.01) continue;
+
+            const dx = p1.x - p2.x;
+            const dy = p1.y - p2.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            if (dist < config.connectionRadius) {
+                const opacity = (1 - dist / config.connectionRadius) * config.connectionOpacity * Math.min(p1.opacity, p2.opacity);
+
+                if (opacity > 0) {
+                    ctx.beginPath();
+                    ctx.moveTo(p1.x, p1.y);
+                    ctx.lineTo(p2.x, p2.y);
+                    ctx.globalAlpha = opacity;
+                    ctx.stroke();
+                }
+            }
+        }
+    }
 }
 
 window.addEventListener('resize', resize);

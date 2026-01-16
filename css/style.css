@@ -20,8 +20,10 @@
 :root {
     /* M3 Motion Tokens */
     --m3-easing-emphasized: cubic-bezier(0.2, 0.0, 0.0, 1.0);
-    --m3-duration-short: 200ms;
-    --m3-duration-medium: 400ms;
+    --m3-duration-short: 150ms;
+    /* Snappier */
+    --m3-duration-medium: 300ms;
+    /* Snappier */
     --m3-duration-long: 500ms;
 
     /* M3 Shape Tokens */
@@ -57,7 +59,7 @@ html {
 }
 
 body {
-    font-family: 'Lexend', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     margin: 0;
     background-color: transparent;
     color: var(--md-sys-color-on-background);
@@ -75,9 +77,15 @@ body {
 /* M3 Type Scale */
 .m3-display-large {
     font-weight: 400;
+    /* Keeping it light as requested */
     font-size: 57px;
     line-height: 64px;
     letter-spacing: -0.25px;
+    background: linear-gradient(135deg, var(--md-sys-color-primary) 0%, var(--md-sys-color-tertiary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
 }
 
 .m3-display-medium {
@@ -242,9 +250,16 @@ footer p {
     justify-content: center;
     align-items: center;
     padding: 8px;
-    background-color: var(--md-sys-color-surface-container);
+    background-color: rgba(255, 255, 255, 0.1);
+    /* Glass effect base */
+    backdrop-filter: blur(16px);
+    /* The blur */
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    /* Subtle glass border */
     border-radius: var(--md-sys-shape-corner-full);
-    box-shadow: var(--m3-elevation-level2);
+    box-shadow: 0 4px 24px -1px rgba(0, 0, 0, 0.1);
+    /* Softer, spread out shadow */
 }
 
 html[data-theme$='-dark'] .m3-navigation-bar {
@@ -345,6 +360,11 @@ html[data-theme$='-dark'] .m3-navigation-bar {
     opacity: var(--m3-state-layer-opacity-pressed);
 }
 
+.m3-button:active {
+    transform: scale(0.96);
+    /* Mechanical click feel */
+}
+
 .cta-container {
     margin-top: 32px;
     display: flex;
@@ -410,19 +430,25 @@ html[data-theme$='-dark'] .m3-navigation-bar {
 }
 
 .m3-card {
-    background-color: var(--md-sys-color-surface-container-low);
+    background-color: rgba(255, 255, 255, 0.05);
+    /* Very subtle fill */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: var(--md-sys-shape-corner-medium);
-    box-shadow: var(--m3-elevation-level1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    transition: box-shadow var(--m3-duration-short) ease-out, transform var(--m3-duration-short) ease-out;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    /* Bouncy spring */
     text-decoration: none;
 }
 
 .m3-card:hover {
-    box-shadow: var(--m3-elevation-level2);
-    transform: translateY(-4px);
+    box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.2);
+    transform: translateY(-8px) scale(1.02);
+    border-color: var(--md-sys-color-primary);
 }
 
 .m3-card.is-link {
