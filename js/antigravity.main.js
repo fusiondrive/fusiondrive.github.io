@@ -1,49 +1,30 @@
 /**
  * antigravity.main.js
  * 
- * Main entry point for Antigravity portfolio
- * Initializes all interactive components
+ * Main entry point for Antigravity SPA
+ * Initializes app shell components (cursor) and router
  */
 
 import { initCursor } from './cursor.controller.js';
+import { initRouter } from './router.js';
 
-// Initialize scroll reveal with IntersectionObserver
-function initScrollReveal() {
-    const elements = document.querySelectorAll('.ag-reveal');
-
-    if (elements.length === 0) {
-        console.warn('No .ag-reveal elements found');
-        return;
-    }
-
-    console.log(`✦ Found ${elements.length} elements to reveal`);
-
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                console.log('Element visible:', entry.target);
-                entry.target.classList.add('is-visible');
-            }
-        });
-    }, {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    });
-
-    elements.forEach(el => observer.observe(el));
-}
-
-// Initialize navigation active state
-function initNav() {
+// Initialize navigation active state for home view sections
+function initNavObserver() {
     const navLinks = document.querySelectorAll('.ag-nav a');
     const sections = document.querySelectorAll('section[id], header[id], footer[id]');
+
+    if (sections.length === 0) return;
 
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 const id = entry.target.id;
                 navLinks.forEach(link => {
-                    link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
+                    const href = link.getAttribute('href');
+                    // Only update active state for section links (not page links)
+                    if (href && href.startsWith('#') && !href.startsWith('#/')) {
+                        link.classList.toggle('active', href === `#${id}`);
+                    }
                 });
             }
         });
@@ -55,11 +36,19 @@ function initNav() {
     sections.forEach(section => observer.observe(section));
 }
 
-// DOM Ready
+// DOM Ready - Initialize App Shell (once, never reloaded)
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize persistent cursor
     initCursor();
-    initScrollReveal();
-    initNav();
 
-    console.log('✦ Antigravity initialized');
+    // Initialize SPA router
+    initRouter();
+
+    // Observe sections for nav active state
+    initNavObserver();
+
+    // Fade in body
+    document.body.style.opacity = '1';
+
+    console.log('✦ Antigravity SPA initialized');
 });
