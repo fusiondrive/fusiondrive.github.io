@@ -518,7 +518,8 @@ img {
     pointer-events: none;
     z-index: 9999;
     transform: translate(-50%, -50%);
-    transition: transform 0.1s ease-out;
+    opacity: 0;
+    transition: opacity 0.3s ease-out, transform 0.1s ease-out;
     mix-blend-mode: exclusion;
 }
 
@@ -533,7 +534,9 @@ img {
     pointer-events: none;
     z-index: 9999;
     transform: translate(-50%, -50%);
-    transition: width 0.3s var(--ag-ease-out),
+    opacity: 0;
+    transition: opacity 0.3s ease-out,
+        width 0.3s var(--ag-ease-out),
         height 0.3s var(--ag-ease-out),
         border-color 0.3s var(--ag-ease-out);
     mix-blend-mode: exclusion;
