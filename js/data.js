@@ -11,7 +11,9 @@ export const pages = {
             <!-- Cinematic Hero Section -->
             <header id="home" class="ag-hero">
                 <div class="ag-hero-title">
-                    <h1 class="ag-display ag-display-xl">STEVE WANG</h1>
+                    <h1 class="ag-display ag-display-xl ag-typewriter">
+                        <span id="typewriter-text"></span><span id="typewriter-cursor" class="ag-typewriter-cursor"></span>
+                    </h1>
                     <!-- 4-Pointed Star Motif -->
                     <span class="ag-star" aria-hidden="true">
                         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

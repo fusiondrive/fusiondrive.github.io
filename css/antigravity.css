@@ -194,6 +194,54 @@ img {
     font-size: clamp(3.5rem, 12vw, 8rem);
 }
 
+/* Typewriter Animation */
+.ag-typewriter {
+    min-height: 1.2em;
+    /* Prevent layout jump */
+    display: inline-flex;
+    align-items: baseline;
+}
+
+/* Aurora Energy Cursor - Stable Vertical Beam */
+.ag-typewriter-cursor {
+    display: inline-block;
+    width: 4px;
+    height: 1.15em;
+    background: linear-gradient(to bottom, #4285f4, #34a853, #fbbc05, #ea4335);
+    border-radius: 2px;
+    margin-left: 0.06em;
+    opacity: 0;
+    filter: blur(2px);
+    transform: translateY(0.15em);
+    /* Extend below text baseline */
+    transition: opacity 0.3s ease-out;
+}
+
+/* Warm-up Blink Phase - High-frequency digital blink */
+.ag-typewriter-cursor.is-breathing {
+    animation: aurora-blink 0.5s step-end infinite;
+}
+
+@keyframes aurora-blink {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+}
+
+/* Typing Phase - Locked at full brightness */
+.ag-typewriter-cursor.is-typing {
+    opacity: 1;
+    filter: blur(2px);
+    animation: none;
+}
+
+
 .ag-display-lg {
     font-size: clamp(2.5rem, 8vw, 5rem);
 }

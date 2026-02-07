@@ -4,6 +4,7 @@
  */
 
 import { pages } from './data.js';
+import { initTypewriter } from './typewriter.controller.js';
 
 // DOM reference
 const appView = document.getElementById('app-view');
@@ -68,6 +69,11 @@ function render() {
 
         // Trigger scroll reveal animations
         initScrollReveal();
+
+        // Initialize typewriter for home page
+        if (pageKey === 'home') {
+            initTypewriter();
+        }
 
         // Fade in new content
         requestAnimationFrame(() => {
