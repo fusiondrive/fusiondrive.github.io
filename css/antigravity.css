@@ -1,0 +1,657 @@
+/*
+ * Antigravity Design System
+ * "Obsidian" - Minimal, Premium, Cinematic
+ * 
+ * Inspired by Google's Antigravity aesthetic
+ */
+
+/* ==========================================================================
+   1. FOUNDATIONS: Google Fonts
+   ========================================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
+
+/* ==========================================================================
+   2. DESIGN TOKENS - System Adaptive Theme
+   Light Mode: "Aerogel" (Default) | Dark Mode: "Obsidian"
+   ========================================================================== */
+:root {
+    /* === Semantic Colors - Light Mode "Aerogel" (Default) === */
+    --ag-bg-void: #F9F9F9;
+    --ag-surface-glass: rgba(255, 255, 255, 0.6);
+    --ag-border-hairline: rgba(0, 0, 0, 0.06);
+    --ag-border-hairline-hover: rgba(0, 0, 0, 0.15);
+    --ag-text-primary: #1F1F1F;
+    --ag-text-secondary: #444746;
+    --ag-text-dim: #6B6B6B;
+
+    /* Glass Material */
+    --ag-glass-blur: 20px;
+    --ag-card-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+
+    /* Nav Glass - Light */
+    --ag-nav-bg: rgba(255, 255, 255, 0.70);
+    --ag-nav-border: rgba(0, 0, 0, 0.08);
+    --ag-nav-blur: 24px;
+
+    /* Horizon / Aurora - Pale Lilac for light */
+    --ag-horizon-color: #E8E0F0;
+    --ag-horizon-opacity: 0.3;
+
+    /* Cursor Colors */
+    --ag-cursor-fill: #1F1F1F;
+    --ag-cursor-ring: rgba(0, 0, 0, 0.2);
+    --ag-cursor-ring-hover: rgba(0, 0, 0, 0.4);
+
+    /* Noise Texture */
+    --ag-noise-opacity: 0.05;
+    --ag-noise-blend: multiply;
+
+    /* === Static Tokens (same in both modes) === */
+    /* Typography */
+    --ag-font-display: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --ag-font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+    --ag-tracking-tight: -0.03em;
+    --ag-tracking-normal: 0;
+
+    /* Shape */
+    --ag-radius-card: 32px;
+    --ag-radius-nav: 9999px;
+    --ag-radius-chip: 8px;
+
+    /* Motion */
+    --ag-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --ag-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+    --ag-duration-slow: 1.2s;
+    --ag-duration-medium: 0.6s;
+    --ag-duration-fast: 0.3s;
+
+    /* Spacing */
+    --ag-gap: 24px;
+    --ag-gap-lg: 48px;
+
+    /* Dormant Image Effect - Light Mode */
+    --ag-dormant-grayscale: 10%;
+    --ag-dormant-opacity: 0.9;
+
+    /* Curtain Overlay - Light Mode */
+    --ag-curtain-gradient: linear-gradient(to top, rgba(249, 249, 249, 0.95) 0%, rgba(249, 249, 249, 0.5) 40%, transparent 100%);
+}
+
+/* === Dark Mode "Obsidian" === */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --ag-bg-void: #000000;
+        --ag-surface-glass: rgba(255, 255, 255, 0.03);
+        --ag-border-hairline: rgba(255, 255, 255, 0.08);
+        --ag-border-hairline-hover: rgba(255, 255, 255, 0.30);
+        --ag-text-primary: #F5F5F5;
+        --ag-text-secondary: #A3A3A3;
+        --ag-text-dim: #808080;
+
+        /* Glass Material - no shadow in dark mode */
+        --ag-card-shadow: none;
+
+        /* Nav Glass - Dark */
+        --ag-nav-bg: rgba(0, 0, 0, 0.50);
+        --ag-nav-border: rgba(255, 255, 255, 0.10);
+
+        /* Horizon / Aurora - Deep Blue/Violet */
+        --ag-horizon-color: #1e1b4b;
+        --ag-horizon-opacity: 0.4;
+
+        /* Cursor Colors */
+        --ag-cursor-fill: #F5F5F5;
+        --ag-cursor-ring: rgba(255, 255, 255, 0.2);
+        --ag-cursor-ring-hover: rgba(255, 255, 255, 0.4);
+
+        /* Noise Texture */
+        --ag-noise-opacity: 0.03;
+        --ag-noise-blend: overlay;
+
+        /* Dormant Image Effect - Dark Mode */
+        --ag-dormant-grayscale: 40%;
+        --ag-dormant-opacity: 0.7;
+
+        /* Curtain Overlay - Dark Mode */
+        --ag-curtain-gradient: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.5) 40%, transparent 100%);
+    }
+}
+
+/* ==========================================================================
+   3. GLOBAL RESET & BASE
+   ========================================================================== */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+    background-color: var(--ag-bg-void);
+    color: var(--ag-text-primary);
+}
+
+body {
+    font-family: var(--ag-font-display);
+    background-color: var(--ag-bg-void);
+    color: var(--ag-text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+    cursor: none;
+    /* Hide default cursor for custom cursor */
+}
+
+/* Restore cursor on touch devices */
+@media (hover: none) and (pointer: coarse) {
+    body {
+        cursor: auto;
+    }
+}
+
+::selection {
+    background: var(--ag-border-hairline-hover);
+    color: var(--ag-text-primary);
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+img {
+    display: block;
+    max-width: 100%;
+}
+
+/* ==========================================================================
+   4. TYPOGRAPHY
+   ========================================================================== */
+
+/* Display - Massive Headlines */
+.ag-display {
+    font-family: var(--ag-font-display);
+    font-weight: 500;
+    letter-spacing: var(--ag-tracking-tight);
+    line-height: 1.05;
+    color: var(--ag-text-primary);
+}
+
+.ag-display-xl {
+    font-size: clamp(3.5rem, 12vw, 8rem);
+}
+
+.ag-display-lg {
+    font-size: clamp(2.5rem, 8vw, 5rem);
+}
+
+.ag-display-md {
+    font-size: clamp(1.75rem, 5vw, 3rem);
+}
+
+/* Mono - Meta Text */
+.ag-mono {
+    font-family: var(--ag-font-mono);
+    font-size: 0.75rem;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ag-text-dim);
+}
+
+/* Body Text */
+.ag-body {
+    font-family: var(--ag-font-display);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.6;
+    color: var(--ag-text-secondary);
+}
+
+.ag-body-lg {
+    font-size: 1.125rem;
+}
+
+/* ==========================================================================
+   5. HORIZON EFFECT (Ambient Light)
+   ========================================================================== */
+.ag-horizon {
+    position: fixed;
+    top: -20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 150vw;
+    height: 60vh;
+    background: radial-gradient(ellipse at center, var(--ag-horizon-color) 0%, transparent 70%);
+    opacity: var(--ag-horizon-opacity);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* ==========================================================================
+   6. FLOATING ISLAND NAVIGATION
+   ========================================================================== */
+.ag-nav {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 50;
+
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+
+    background: var(--ag-nav-bg);
+    backdrop-filter: blur(var(--ag-nav-blur));
+    -webkit-backdrop-filter: blur(var(--ag-nav-blur));
+    border: 1px solid var(--ag-nav-border);
+    border-radius: var(--ag-radius-nav);
+}
+
+.ag-nav a {
+    padding: 10px 20px;
+    font-family: var(--ag-font-display);
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--ag-text-secondary);
+    border-radius: var(--ag-radius-nav);
+    transition: color var(--ag-duration-fast) var(--ag-ease-out),
+        background-color var(--ag-duration-fast) var(--ag-ease-out);
+}
+
+.ag-nav a:hover {
+    color: var(--ag-text-primary);
+    background: var(--ag-surface-glass);
+}
+
+.ag-nav a.active {
+    color: var(--ag-text-primary);
+}
+
+/* ==========================================================================
+   7. HERO SECTION
+   ========================================================================== */
+.ag-hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: var(--ag-gap);
+    z-index: 1;
+}
+
+.ag-hero-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+}
+
+.ag-hero-subtitle {
+    margin-top: 1rem;
+}
+
+/* Star Motif */
+.ag-star {
+    width: 1em;
+    height: 1em;
+    animation: ag-rotate 60s linear infinite;
+}
+
+.ag-star svg {
+    width: 100%;
+    height: 100%;
+    fill: var(--ag-text-primary);
+}
+
+@keyframes ag-rotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ==========================================================================
+   8. CONTENT SECTIONS
+   ========================================================================== */
+.ag-section {
+    position: relative;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: var(--ag-gap-lg) var(--ag-gap);
+    z-index: 1;
+}
+
+.ag-section-header {
+    margin-bottom: var(--ag-gap-lg);
+}
+
+/* ==========================================================================
+   9. BENTO GRID (2x2 Symmetric)
+   ========================================================================== */
+.ag-bento {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+}
+
+/* Responsive Grid */
+@media (max-width: 640px) {
+    .ag-bento {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ==========================================================================
+   10. GLASS CARDS (Adaptive)
+   ========================================================================== */
+.ag-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+
+    background: var(--ag-surface-glass);
+    backdrop-filter: blur(var(--ag-glass-blur));
+    -webkit-backdrop-filter: blur(var(--ag-glass-blur));
+    border: 1px solid var(--ag-border-hairline);
+    border-radius: var(--ag-radius-card);
+    box-shadow: var(--ag-card-shadow);
+
+    transition: border-color var(--ag-duration-fast) var(--ag-ease-out),
+        transform var(--ag-duration-fast) var(--ag-ease-out),
+        box-shadow var(--ag-duration-fast) var(--ag-ease-out);
+}
+
+.ag-card:hover {
+    border-color: var(--ag-border-hairline-hover);
+}
+
+/* Card Image */
+.ag-card-media {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+}
+
+.ag-card-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: var(--ag-dormant-opacity);
+    filter: grayscale(var(--ag-dormant-grayscale));
+    transition: filter var(--ag-duration-medium) var(--ag-ease-out),
+        opacity var(--ag-duration-medium) var(--ag-ease-out),
+        transform var(--ag-duration-medium) var(--ag-ease-out);
+}
+
+.ag-card:hover .ag-card-media img {
+    filter: grayscale(0%);
+    opacity: 1;
+    transform: scale(1.02);
+}
+
+/* Card Curtain Overlay - Theme Aware */
+.ag-card-media::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 70%;
+    background: var(--ag-curtain-gradient);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Card Content */
+.ag-card-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: var(--ag-gap);
+    z-index: 2;
+}
+
+.ag-card-title {
+    font-family: var(--ag-font-display);
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--ag-text-primary);
+    margin-bottom: 0.5rem;
+}
+
+/* Card Tags */
+.ag-card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.ag-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    background: var(--ag-surface-glass);
+    border: 1px solid var(--ag-border-hairline);
+    border-radius: var(--ag-radius-chip);
+    font-family: var(--ag-font-mono);
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--ag-text-secondary);
+}
+
+/* ==========================================================================
+   11. SCROLL REVEAL ANIMATION
+   ========================================================================== */
+.ag-reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ag-reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Staggered delays */
+.ag-reveal:nth-child(1) {
+    transition-delay: 0ms;
+}
+
+.ag-reveal:nth-child(2) {
+    transition-delay: 100ms;
+}
+
+.ag-reveal:nth-child(3) {
+    transition-delay: 200ms;
+}
+
+.ag-reveal:nth-child(4) {
+    transition-delay: 300ms;
+}
+
+.ag-reveal:nth-child(5) {
+    transition-delay: 400ms;
+}
+
+.ag-reveal:nth-child(6) {
+    transition-delay: 500ms;
+}
+
+/* ==========================================================================
+   12. CUSTOM CURSOR
+   ========================================================================== */
+.ag-cursor-dot {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 6px;
+    height: 6px;
+    background: var(--ag-cursor-fill);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s ease-out;
+    mix-blend-mode: exclusion;
+}
+
+.ag-cursor-ring {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--ag-cursor-ring);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s var(--ag-ease-out),
+        height 0.3s var(--ag-ease-out),
+        border-color 0.3s var(--ag-ease-out);
+    mix-blend-mode: exclusion;
+}
+
+.ag-cursor-ring.is-hovering {
+    width: 48px;
+    height: 48px;
+    border-color: var(--ag-cursor-ring-hover);
+}
+
+/* Hide custom cursor elements on touch devices */
+@media (hover: none) and (pointer: coarse) {
+
+    .ag-cursor-dot,
+    .ag-cursor-ring {
+        display: none;
+    }
+}
+
+/* ==========================================================================
+   13. SKILLS SECTION
+   ========================================================================== */
+.ag-skills {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ag-gap-lg);
+}
+
+.ag-skill-category h3 {
+    font-family: var(--ag-font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ag-text-dim);
+    margin-bottom: 1rem;
+}
+
+.ag-skill-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.ag-skill-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 16px;
+    background: var(--ag-surface-glass);
+    border: 1px solid var(--ag-border-hairline);
+    border-radius: var(--ag-radius-chip);
+    font-family: var(--ag-font-display);
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--ag-text-primary);
+    transition: border-color var(--ag-duration-fast) var(--ag-ease-out),
+        background-color var(--ag-duration-fast) var(--ag-ease-out);
+}
+
+.ag-skill-chip:hover {
+    border-color: var(--ag-border-hairline-hover);
+}
+
+/* ==========================================================================
+   14. FOOTER / CONNECT SECTION
+   ========================================================================== */
+.ag-footer {
+    padding: var(--ag-gap-lg) var(--ag-gap);
+    padding-bottom: 120px;
+    /* Space for floating nav */
+    text-align: center;
+}
+
+.ag-footer-links {
+    display: flex;
+    justify-content: center;
+    gap: var(--ag-gap);
+    margin-top: var(--ag-gap);
+}
+
+.ag-icon-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border: 1px solid var(--ag-border-hairline);
+    border-radius: 50%;
+    color: var(--ag-text-secondary);
+    transition: border-color var(--ag-duration-fast) var(--ag-ease-out),
+        color var(--ag-duration-fast) var(--ag-ease-out);
+}
+
+.ag-icon-link:hover {
+    border-color: var(--ag-border-hairline-hover);
+    color: var(--ag-text-primary);
+}
+
+.ag-icon-link svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+}
+
+/* ==========================================================================
+   15. UTILITY CLASSES
+   ========================================================================== */
+.ag-text-center {
+    text-align: center;
+}
+
+.ag-text-left {
+    text-align: left;
+}
+
+.ag-mt-sm {
+    margin-top: 0.5rem;
+}
+
+.ag-mt-md {
+    margin-top: 1rem;
+}
+
+.ag-mt-lg {
+    margin-top: 2rem;
+}
+
+.ag-mb-lg {
+    margin-bottom: 2rem;
+}
