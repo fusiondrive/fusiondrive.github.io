@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Redirecting...</title>
+    <style>
+        body {
+            background: #000;
+            color: #666;
+            font-family: system-ui, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+    </style>
+    <script>
+        (function () {
+            // Map old paths to new hash routes
+            const pathMap = {
+                '/imac-g4': '#/project/imac-g4',
+                '/imac-g4.html': '#/project/imac-g4',
+                '/imac-revival': '#/project/imac-revival',
+                '/imac-revival.html': '#/project/imac-revival'
+            };
+
+            const path = location.pathname;
+            const newHash = pathMap[path];
+
+            if (newHash) {
+                // Redirect to home with appropriate hash
+                location.replace('/' + newHash);
+            } else {
+                // Unknown path - redirect to home
+                location.replace('/');
+            }
+        })();
+    </script>
+</head>
+
+<body>
+    <p>Redirecting...</p>
+</body>
+
+</html>
