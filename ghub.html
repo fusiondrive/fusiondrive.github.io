@@ -1,9 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Order App Final</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#ffffff">
     <style>
         :root {
             --brand-purple: #563385;
@@ -29,59 +34,60 @@
         body {
             background-color: #fff;
             color: var(--text-dark);
-            width: 100%; 
-            height: 100vh; 
-            overflow: hidden; 
-            position: fixed; 
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            position: fixed;
         }
 
         /* --- Page Transitions & Container --- */
         .view-container {
-            position: absolute; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            background: #fff; 
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #fff;
             /* standard iOS push transition curve */
             transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
             z-index: 10;
-            overflow: hidden; /* keeping this hidden locks the scroll */
+            overflow: hidden;
+            /* keeping this hidden locks the scroll */
         }
 
         /* page 2 starts off-screen to the right */
-        #view-details { 
-            transform: translateX(100%); 
-            z-index: 200; 
-            background-color: #fff; 
+        #view-details {
+            transform: translateX(100%);
+            z-index: 200;
+            background-color: #fff;
         }
-        
+
         /* active state slides it in */
-        #view-details.active { 
-            transform: translateX(0); 
+        #view-details.active {
+            transform: translateX(0);
         }
 
         /* --- Header / Navigation --- */
-        .app-header { 
-            padding: 12px 16px; 
-            height: 50px; 
-            background: #fff; 
+        .app-header {
+            padding: 12px 16px;
+            height: 50px;
+            background: #fff;
             display: flex;
             align-items: center;
-            justify-content: space-between; 
-            position: relative; 
+            justify-content: space-between;
+            position: relative;
         }
 
         /* tap target for the back/down arrow */
         .header-icon-left {
-            z-index: 10; 
+            z-index: 10;
             display: flex;
             align-items: center;
             cursor: pointer;
         }
 
         /* absolute centering for the title text */
-        .header-title { 
+        .header-title {
             position: absolute;
             left: 0;
             top: 0;
@@ -90,164 +96,468 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 700; 
-            font-size: 17px; 
-            pointer-events: none; /* let clicks pass through to buttons underneath if any */
+            font-weight: 700;
+            font-size: 17px;
+            pointer-events: none;
+            /* let clicks pass through to buttons underneath if any */
         }
 
         /* --- General UI Components --- */
-        .status-strip { 
-            background-color: #f2f2f2; 
-            padding: 14px 0; 
-            text-align: center; 
-            border-top: 1px solid #e5e5e5; 
-            border-bottom: 1px solid #e5e5e5; 
-        }
-        
-        .order-id-text { 
-            font-weight: 900; 
-            font-size: 21px; 
-            color: #333; 
-            letter-spacing: 0.5px; 
-            text-transform: uppercase; 
+        .status-strip {
+            background-color: #f2f2f2;
+            padding: 14px 0;
+            text-align: center;
+            border-top: 1px solid #e5e5e5;
+            border-bottom: 1px solid #e5e5e5;
         }
 
-        .content-wrapper { 
-            padding: 24px; 
+        .order-id-text {
+            font-weight: 900;
+            font-size: 21px;
+            color: #333;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .content-wrapper {
+            padding: 24px;
             /* extra padding at bottom so things don't get cut off on notched phones */
-            padding-bottom: 100px; 
+            padding-bottom: 100px;
         }
 
-        .label-sub { font-size: 15px; color: var(--text-grey); margin-bottom: 6px; }
-        .text-hero { font-size: 24px; font-weight: 800; color: #111; margin-bottom: 25px; }
+        .label-sub {
+            font-size: 15px;
+            color: var(--text-grey);
+            margin-bottom: 6px;
+        }
+
+        .text-hero {
+            font-size: 24px;
+            font-weight: 800;
+            color: #111;
+            margin-bottom: 25px;
+        }
 
         /* Custom Progress Bar */
-        .progress-tracker { position: relative; height: 42px; margin-bottom: 8px; }
-        .track-line { 
-            position: absolute; top: 50%; transform: translateY(-50%); 
-            height: 6px; background: var(--brand-green); border-radius: 3px; 
-            z-index: 1; left: 8px; right: 21px; 
-        }
-        .track-dot { 
-            width: 16px; height: 16px; border-radius: 50%; 
-            background: var(--brand-green); z-index: 2; 
-            position: absolute; top: 50%; 
-        }
-        .track-dot.start { left: 0; transform: translateY(-50%); }
-        .track-dot.mid { left: 50%; transform: translate(-50%, -50%); }
-        
-        .track-check { 
-            width: 42px; height: 42px; border-radius: 50%; 
-            background: var(--brand-green); display: flex; 
-            align-items: center; justify-content: center; 
-            z-index: 2; position: absolute; right: 0; top: 50%; 
-            transform: translateY(-50%); 
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+        .progress-tracker {
+            position: relative;
+            height: 42px;
+            margin-bottom: 8px;
         }
 
-        .status-msg { font-size: 15px; color: #111; margin-bottom: 35px; margin-left: 2px; }
+        .track-line {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 6px;
+            background: var(--brand-green);
+            border-radius: 3px;
+            z-index: 1;
+            left: 8px;
+            right: 21px;
+        }
+
+        .track-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--brand-green);
+            z-index: 2;
+            position: absolute;
+            top: 50%;
+        }
+
+        .track-dot.start {
+            left: 0;
+            transform: translateY(-50%);
+        }
+
+        .track-dot.mid {
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .track-check {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: var(--brand-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .status-msg {
+            font-size: 15px;
+            color: #111;
+            margin-bottom: 35px;
+            margin-left: 2px;
+        }
 
         /* Address Block */
-        .location-block { margin-bottom: 30px; }
-        .location-row { display: flex; justify-content: space-between; align-items: baseline; }
-        .address-bold { font-weight: 700; font-size: 17px; color: #111; }
-        .link-brand { color: var(--brand-purple); font-weight: 600; font-size: 15px; text-decoration: none; }
+        .location-block {
+            margin-bottom: 30px;
+        }
+
+        .location-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+
+        .address-bold {
+            font-weight: 700;
+            font-size: 17px;
+            color: #111;
+        }
+
+        .link-brand {
+            color: var(--brand-purple);
+            font-weight: 600;
+            font-size: 15px;
+            text-decoration: none;
+        }
 
         /* Main CTA Button */
-        .btn-outline { 
-            display: block; width: 100%; padding: 16px; 
-            border: 2px solid var(--brand-purple); border-radius: 30px; 
-            background: transparent; color: var(--brand-purple); 
-            font-weight: 700; font-size: 17px; text-align: center; 
-            margin-bottom: 24px; text-decoration: none; cursor: pointer; 
+        .btn-outline {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            border: 2px solid var(--brand-purple);
+            border-radius: 30px;
+            background: transparent;
+            color: var(--brand-purple);
+            font-weight: 700;
+            font-size: 17px;
+            text-align: center;
+            margin-bottom: 24px;
+            text-decoration: none;
+            cursor: pointer;
         }
 
-        .link-text { color: var(--brand-purple); text-decoration: none; font-size: 15px; }
+        .link-text {
+            color: var(--brand-purple);
+            text-decoration: none;
+            font-size: 15px;
+        }
 
         /* Eco/Recycle Section */
-        .eco-container { display: flex; gap: 12px; align-items: flex-start; }
-        .img-icon-recycle { width: 26px; height: 26px; object-fit: contain; flex-shrink: 0; margin-top: 1px; }
-        .eco-desc strong { display: block; font-size: 16px; color: #333; margin-bottom: 4px; font-weight: 700; }
-        .eco-desc a, .eco-desc span { color: var(--brand-purple); font-size: 15px; text-decoration: none; cursor: pointer;}
+        .eco-container {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .img-icon-recycle {
+            width: 26px;
+            height: 26px;
+            object-fit: contain;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .eco-desc strong {
+            display: block;
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+
+        .eco-desc a,
+        .eco-desc span {
+            color: var(--brand-purple);
+            font-size: 15px;
+            text-decoration: none;
+            cursor: pointer;
+        }
 
         /* --- Details View Specifics --- */
-        .nav-actions { width: 60px; }
-        .btn-back { display: flex; align-items: center; color: var(--brand-purple); font-size: 17px; font-weight: 400; cursor: pointer; text-decoration: none; gap: 2px; }
-        .btn-back svg { width: 22px; height: 22px; fill: var(--brand-purple); margin-left: -6px;}
-        
-        /* locking scrolling here as requested */
-        .details-content { 
-            height: 100%; 
-            padding: 20px; 
-            padding-bottom: 80px; 
-            overflow: hidden; /* no scroll allowed */
+        .nav-actions {
+            width: 60px;
         }
 
-        .rest-header { display: flex; gap: 15px; margin-bottom: 20px; }
-        .logo-box { width: 50px; height: 50px; border: 1px solid #e0e0e0; display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; }
-        .logo-img { width: 100%; height: 100%; object-fit: cover; display: block; }
-        
-        .rest-meta h2 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
-        .rest-meta p { font-size: 14px; color: #666; margin-bottom: 8px; }
-        .rest-meta .meta-order { font-size: 14px; color: #333; }
+        .btn-back {
+            display: flex;
+            align-items: center;
+            color: var(--brand-purple);
+            font-size: 17px;
+            font-weight: 400;
+            cursor: pointer;
+            text-decoration: none;
+            gap: 2px;
+        }
 
-        .section-header { font-weight: 700; font-size: 15px; margin-bottom: 4px; color: #111; }
-        .timestamp { font-size: 15px; color: #444; margin-bottom: 10px; }
-        .divider { height: 1px; background: #eee; margin: 15px 0 20px 0; }
+        .btn-back svg {
+            width: 22px;
+            height: 22px;
+            fill: var(--brand-purple);
+            margin-left: -6px;
+        }
+
+        /* locking scrolling here as requested */
+        .details-content {
+            height: 100%;
+            padding: 20px;
+            padding-bottom: 80px;
+            overflow: hidden;
+            /* no scroll allowed */
+        }
+
+        .rest-header {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .logo-box {
+            width: 50px;
+            height: 50px;
+            border: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .logo-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .rest-meta h2 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .rest-meta p {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .rest-meta .meta-order {
+            font-size: 14px;
+            color: #333;
+        }
+
+        .section-header {
+            font-weight: 700;
+            font-size: 15px;
+            margin-bottom: 4px;
+            color: #111;
+        }
+
+        .timestamp {
+            font-size: 15px;
+            color: #444;
+            margin-bottom: 10px;
+        }
+
+        .divider {
+            height: 1px;
+            background: #eee;
+            margin: 15px 0 20px 0;
+        }
 
         /* Receipt List */
-        .receipt-title { font-size: 16px; font-weight: 700; margin-bottom: 15px; }
-        .receipt-row { display: flex; gap: 15px; margin-bottom: 30px; }
-        .qty-col { font-size: 16px; color: #111; width: 20px; }
-        .item-col { flex: 1; }
-        .item-main { font-size: 16px; font-weight: 400; color: #000; margin-bottom: 6px; }
-        
-        .modifiers-list { list-style: none; padding-left: 8px; }
-        .modifiers-list li { font-size: 15px; color: #666; margin-bottom: 4px; position: relative; padding-left: 10px; }
-        .modifiers-list li::before { content: "•"; position: absolute; left: 0; color: #999; }
-        
-        .link-right { display: block; text-align: right; color: var(--brand-purple); font-weight: 600; font-size: 15px; text-decoration: none; margin-top: 20px; }
+        .receipt-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .receipt-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .qty-col {
+            font-size: 16px;
+            color: #111;
+            width: 20px;
+        }
+
+        .item-col {
+            flex: 1;
+        }
+
+        .item-main {
+            font-size: 16px;
+            font-weight: 400;
+            color: #000;
+            margin-bottom: 6px;
+        }
+
+        .modifiers-list {
+            list-style: none;
+            padding-left: 8px;
+        }
+
+        .modifiers-list li {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 4px;
+            position: relative;
+            padding-left: 10px;
+        }
+
+        .modifiers-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #999;
+        }
+
+        .link-right {
+            display: block;
+            text-align: right;
+            color: var(--brand-purple);
+            font-weight: 600;
+            font-size: 15px;
+            text-decoration: none;
+            margin-top: 20px;
+        }
 
         /* --- Modals & Sheets --- */
-        .modal-overlay { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.8); z-index: 9999; 
-            display: flex; align-items: center; justify-content: center; 
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        .modal-card { 
-            background: white; width: 85%; max-width: 320px; 
-            padding: 25px; border-radius: 20px; text-align: center; 
+
+        .modal-card {
+            background: white;
+            width: 85%;
+            max-width: 320px;
+            padding: 25px;
+            border-radius: 20px;
+            text-align: center;
         }
-        .modal-card h3 { margin-bottom: 20px; color: var(--brand-purple); }
-        .input-label { display: block; text-align: left; font-size: 14px; color: #666; margin-bottom: 5px; margin-left: 2px; }
-        .input-field { width: 100%; padding: 12px; font-size: 16px; border: 2px solid #eee; border-radius: 10px; margin-bottom: 15px; font-family: inherit; }
-        .btn-confirm { background: var(--brand-purple); color: white; border: none; padding: 12px 30px; border-radius: 25px; font-size: 16px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; }
+
+        .modal-card h3 {
+            margin-bottom: 20px;
+            color: var(--brand-purple);
+        }
+
+        .input-label {
+            display: block;
+            text-align: left;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+            margin-left: 2px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            font-family: inherit;
+        }
+
+        .btn-confirm {
+            background: var(--brand-purple);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
 
         /* QR Bottom Sheet */
-        .dim-layer { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0, 0, 0, 0.55); z-index: 300; 
-            opacity: 0; pointer-events: none; 
-            transition: opacity 0.3s ease; backdrop-filter: blur(1px); 
+        .dim-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.55);
+            z-index: 300;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            backdrop-filter: blur(1px);
         }
-        .dim-layer.active { opacity: 1; pointer-events: auto; }
 
-        .slide-sheet { 
-            position: fixed; bottom: 0; left: 0; width: 100%; 
-            background: white; border-radius: 20px 20px 0 0; 
-            padding: 20px 24px 40px; z-index: 301; 
-            transform: translateY(100%); 
-            transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1); 
+        .dim-layer.active {
+            opacity: 1;
+            pointer-events: auto;
         }
-        .slide-sheet.active { transform: translateY(0); }
 
-        .sheet-nav { display: grid; grid-template-columns: 24px 1fr 24px; align-items: center; margin-bottom: 25px; }
-        .sheet-heading { text-align: center; font-weight: 700; font-size: 19px; }
-        .qr-box { width: 200px; height: 200px; background: #eee; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; }
-        .qr-display { width: 100%; height: 100%; object-fit: contain; }
+        .slide-sheet {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: white;
+            border-radius: 20px 20px 0 0;
+            padding: 20px 24px 40px;
+            z-index: 301;
+            transform: translateY(100%);
+            transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
 
+        .slide-sheet.active {
+            transform: translateY(0);
+        }
+
+        .sheet-nav {
+            display: grid;
+            grid-template-columns: 24px 1fr 24px;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .sheet-heading {
+            text-align: center;
+            font-weight: 700;
+            font-size: 19px;
+        }
+
+        .qr-box {
+            width: 200px;
+            height: 200px;
+            background: #eee;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qr-display {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
     </style>
 </head>
+
 <body>
 
     <div id="modal-config" class="modal-overlay">
@@ -262,11 +572,12 @@
     </div>
 
     <div id="view-home" class="view-container">
-        
+
         <div class="app-header">
             <div class="header-icon-left">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#563385" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M6 9l6 6 6-6"/>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#563385" stroke-width="3"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 9l6 6 6-6" />
                 </svg>
             </div>
             <div class="header-title">Your order</div>
@@ -286,7 +597,8 @@
                 <div class="track-dot start"></div>
                 <div class="track-dot mid"></div>
                 <div class="track-check">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="4"
+                        stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="20 6 9 17 4 12"></polyline>
                     </svg>
                 </div>
@@ -302,7 +614,7 @@
             </div>
 
             <div id="btn-details" class="btn-outline">View order details</div>
-            
+
             <a href="#" class="link-text" style="display:block; margin-bottom:30px;">Need help with your order?</a>
 
             <div class="eco-container">
@@ -316,11 +628,14 @@
     </div>
 
     <div id="view-details" class="view-container">
-        
+
         <div class="app-header">
             <div class="nav-actions">
                 <div id="btn-back" class="btn-back">
-                    <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <svg viewBox="0 0 24 24">
+                        <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2.5" fill="none"
+                            stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
                     Back
                 </div>
             </div>
@@ -341,7 +656,8 @@
                     <div class="meta-order">Your order: #<span id="order-id-display-2">197</span></div>
                 </div>
                 <div style="display:flex; align-items:center;">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="3"
+                        stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="9 18 15 12 9 6"></polyline>
                     </svg>
                 </div>
@@ -392,8 +708,9 @@
 
     <div id="sheet-qr" class="slide-sheet">
         <div class="sheet-nav">
-            <svg id="btn-close-sheet" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="cursor:pointer">
-                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            <svg id="btn-close-sheet" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#333"
+                stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="cursor:pointer">
+                <path d="M19 12H5M12 19l-7-7 7-7" />
             </svg>
             <div class="sheet-heading">Reusable containers</div>
             <div></div>
@@ -402,7 +719,7 @@
             Show QR code to the cashier if requested.
         </div>
         <div class="qr-box">
-            <img src="assets/qrcode.png" alt="QR Code" class="qr-display"> 
+            <img src="assets/qrcode.png" alt="QR Code" class="qr-display">
         </div>
         <div style="text-align:center;">
             <div id="qr-ts-time" style="font-size:28px; font-weight:700; color:#000; margin-bottom:6px;">4:35pm</div>
@@ -412,12 +729,12 @@
 
     <script>
         // Init: Pre-fill the config modal with current system time
-        window.onload = function() {
+        window.onload = function () {
             const now = new Date();
             // helper to pad numbers with leading zeros
             const pad = (n) => String(n).padStart(2, '0');
             const fmt = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`;
-            
+
             document.getElementById('input-time').value = fmt;
         };
 
@@ -433,7 +750,7 @@
             }
 
             // calculate and update all timestamps
-            if(timeVal) {
+            if (timeVal) {
                 const dateObj = new Date(timeVal);
                 refreshTimestamps(dateObj);
                 calculateReturnDate(dateObj);
@@ -451,10 +768,10 @@
             const m = String(date.getMinutes()).padStart(2, '0');
             const ampm = h >= 12 ? 'PM' : 'AM';
             const ampmSmall = h >= 12 ? 'pm' : 'am';
-            
+
             // convert 24h to 12h format
             h = h % 12;
-            h = h ? h : 12; 
+            h = h ? h : 12;
 
             const bigTime = `${String(h).padStart(2, '0')}:${m}${ampm}`;
             const smallTime = `${h}:${m} ${ampmSmall}`;
@@ -480,10 +797,10 @@
             const rY = rDate.getFullYear();
             const rM = String(rDate.getMonth() + 1).padStart(2, '0');
             const rD = String(rDate.getDate()).padStart(2, '0');
-            
+
             const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
             const rMonthStr = monthNames[rDate.getMonth()];
-            
+
             document.getElementById('return-date-home').textContent = `Return containers by ${rMonthStr} ${rD}, ${rY}`;
             document.getElementById('return-date-detail').textContent = `Return containers by ${rM}/${rD}/${rY}`;
         }
@@ -501,9 +818,9 @@
         const mask = document.getElementById('mask-layer');
         const sheet = document.getElementById('sheet-qr');
         const btnCloseSheet = document.getElementById('btn-close-sheet');
-        
+
         // bind triggers
-        const triggers = [ document.getElementById('trigger-qr-1'), document.getElementById('trigger-qr-2') ];
+        const triggers = [document.getElementById('trigger-qr-1'), document.getElementById('trigger-qr-2')];
 
         function toggleSheet(show) {
             const action = show ? 'add' : 'remove';
@@ -512,9 +829,9 @@
         }
 
         triggers.forEach(t => {
-            if(t) t.addEventListener('click', (e) => { 
-                e.preventDefault(); 
-                toggleSheet(true); 
+            if (t) t.addEventListener('click', (e) => {
+                e.preventDefault();
+                toggleSheet(true);
             });
         });
 
@@ -523,4 +840,5 @@
         mask.addEventListener('click', () => toggleSheet(false));
     </script>
 </body>
+
 </html>
