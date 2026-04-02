@@ -385,10 +385,10 @@ img {
    ========================================================================== */
 .ag-section {
     position: relative;
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: var(--ag-gap-lg) var(--ag-gap);
-    z-index: 1;
+    max-width: 100%;
+    padding: var(--ag-gap-lg) max(var(--ag-gap), calc((100% - 1400px) / 2 + var(--ag-gap)));
+    z-index: 20;
+    background-color: var(--ag-bg-void);
 }
 
 .ag-section-header {
@@ -694,7 +694,8 @@ img {
 .ag-article {
     position: relative;
     min-height: 100vh;
-    z-index: 1;
+    z-index: 20;
+    background-color: var(--ag-bg-void);
 }
 
 /* Article Header - Cinematic */
