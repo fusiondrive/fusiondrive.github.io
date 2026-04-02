@@ -151,15 +151,6 @@ body {
     color: var(--ag-text-primary);
     min-height: 100vh;
     overflow-x: hidden;
-    cursor: none;
-    /* Hide default cursor for custom cursor */
-}
-
-/* Restore cursor on touch devices */
-@media (hover: none) and (pointer: coarse) {
-    body {
-        cursor: auto;
-    }
 }
 
 ::selection {
