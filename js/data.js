@@ -42,31 +42,28 @@ export const pages = {
                     </p>
 
                     <!-- 3 iPhone Mockups (animated by showcase.controller.js) -->
+                    <!-- Labels live INSIDE each phone so translateY moves them as one unit -->
                     <div class="ag-showcase-phones" id="phones-wrap">
 
                         <!-- ── Phone Left · Onboarding ── -->
                         <div class="ag-iphone" id="ph-left">
                             <img src="assets/CABSF/boarding1.png" alt="CABSFlight — Welcome onboarding screen" class="ag-iphone-img" draggable="false">
+                            <span class="ag-iphone-label">Onboarding</span>
                         </div>
 
                         <!-- ── Phone Center · Live Map ── -->
                         <div class="ag-iphone ag-iphone--featured" id="ph-center">
                             <img src="assets/CABSF/inapp.png" alt="CABSFlight — Live bus tracking map" class="ag-iphone-img" draggable="false">
+                            <span class="ag-iphone-label ag-iphone-label--c">Live Tracking</span>
                         </div>
 
                         <!-- ── Phone Right · Route Picker ── -->
                         <div class="ag-iphone" id="ph-right">
                             <img src="assets/CABSF/boarding2.png" alt="CABSFlight — Choose your bus lines" class="ag-iphone-img" draggable="false">
+                            <span class="ag-iphone-label">Route Picker</span>
                         </div>
 
                     </div><!-- /.ag-showcase-phones -->
-
-                    <!-- Phone feature labels (flex widths mirror each phone column) -->
-                    <div id="phone-labels" class="ag-showcase-labels">
-                        <span class="ag-showcase-label">Onboarding</span>
-                        <span class="ag-showcase-label ag-showcase-label--c">Live Tracking</span>
-                        <span class="ag-showcase-label">Route Picker</span>
-                    </div>
 
                     <!-- Portfolio CTA -->
                     <div class="ag-showcase-cta">

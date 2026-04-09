@@ -58,7 +58,6 @@ export function initShowcase() {
     const pL = document.getElementById('ph-left');
     const pC = document.getElementById('ph-center');
     const pR = document.getElementById('ph-right');
-    const labels = document.getElementById('phone-labels');
 
     if (!pL || !pC || !pR) return;
 
@@ -68,14 +67,14 @@ export function initShowcase() {
      * INITIAL STATE
      * Push phones 420px below their podium resting position,
      * fully transparent, slightly scaled down.
+     * Labels live inside each .ag-iphone, so they move
+     * automatically with the parent's transform.
      * ───────────────────────────────────────────────────── */
     const INITIAL_Y = 420;
 
     gsap.set(pL, { y: podium.sideY + INITIAL_Y, opacity: 0, scale: 0.90 });
     gsap.set(pC, { y: 0            + INITIAL_Y, opacity: 0, scale: 0.90 });
     gsap.set(pR, { y: podium.sideY + INITIAL_Y, opacity: 0, scale: 0.90 });
-
-    if (labels) gsap.set(labels, { opacity: 0, y: 24 });
 
     /* ─────────────────────────────────────────────────────
      * PER-PHONE RANDOMISED CONFIGS
@@ -146,17 +145,10 @@ export function initShowcase() {
     }, 0.12);
 
     /*
-     * LABELS — fade in once phones are mostly settled
-     * 【改动】delay 调大到 0.70s，等手机基本到位后再显示。
+     * Labels now live inside each .ag-iphone container,
+     * so they inherit the parent's transform automatically.
+     * No separate tween needed.
      */
-    if (labels) {
-        tl.to(labels, {
-            opacity: 1,
-            y: 0,
-            duration: 0.4,
-            ease: 'power2.out',
-        }, 0.70);
-    }
 
     /* ── Resize handler ── */
     let resizeTimer;

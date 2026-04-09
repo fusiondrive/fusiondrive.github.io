@@ -933,21 +933,19 @@ img {
     position: relative;
     z-index: 20;
     min-height: 100vh;
-    min-height: 100svh;           /* mobile-safe: excludes browser chrome */
+    min-height: 100svh;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: max(48px, 8vh) 0;    /* breathing room on extreme aspect ratios */
+    padding: max(48px, 8vh) 0;
+    overflow-x: hidden;           /* Bug 2 fix: prevent phones from widening page */
 }
 
-/* ── Stage — normal flow, vertically centered content ── */
+/* ── Stage — normal document flow (no sticky, no pinning) ── */
 .ag-showcase-stage {
-    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    overflow: visible;
     padding: 0 var(--ag-gap);
     text-align: center;
 }
@@ -987,11 +985,10 @@ img {
     /* No fixed height — phones define it via aspect-ratio */
 }
 
-/* ── iPhone mockup — image-based (PNGs include full device bezel) ── */
+/* ── iPhone mockup — image + label move as one unit ── */
 .ag-iphone {
     flex: 0 0 auto;
-    width: clamp(200px, 22vw, 320px);  /* scales from 200px → 320px */
-    aspect-ratio: 1046 / 2066;
+    width: clamp(200px, 22vw, 320px);
     will-change: transform, opacity;
     /* Podium offset — side phones sit 60px lower */
     transform: translateY(60px);
@@ -999,6 +996,11 @@ img {
     filter:
         drop-shadow(0 28px 48px rgba(0, 0, 0, 0.50))
         drop-shadow(0 10px 18px rgba(0, 0, 0, 0.28));
+}
+
+/* The image keeps the phone aspect ratio */
+.ag-iphone .ag-iphone-img {
+    aspect-ratio: 1046 / 2066;
 }
 
 /* Center phone — elevated (no Y offset), slightly larger, stronger shadow */
@@ -1039,31 +1041,21 @@ img {
     -webkit-user-drag: none;
 }
 
-/* ── Phone labels (sit beneath each phone column) ── */
-.ag-showcase-labels {
-    display: flex;
-    justify-content: center;
-    gap: clamp(12px, 2vw, 28px); /* mirror phones gap */
-    width: 100%;
-    max-width: 1140px;
-    margin: 12px auto 0;
-    padding: 0 var(--ag-gap);
-    pointer-events: none;
-}
-
-.ag-showcase-label {
-    flex: 0 0 auto;
-    width: clamp(200px, 22vw, 320px); /* match side phone width */
+/* ── Phone label (lives inside .ag-iphone, moves with translateY) ── */
+.ag-iphone-label {
+    display: block;
+    margin-top: 14px;
     text-align: center;
     font-family: var(--ag-font-mono);
     font-size: 0.65rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--ag-text-dim);
+    pointer-events: none;
+    white-space: nowrap;
 }
 
-.ag-showcase-label--c {
-    width: clamp(220px, 24vw, 350px); /* match center phone width */
+.ag-iphone-label--c {
     color: var(--ag-text-secondary);
     font-weight: 500;
 }
@@ -1104,16 +1096,15 @@ img {
 
 /* ── Responsive — Phones ── */
 @media (max-width: 768px) {
-    .ag-iphone           { transform: translateY(40px); }
-    .ag-iphone--featured { transform: translateY(0); }
-
-    .ag-showcase-label     { font-size: 0.55rem; }
+    .ag-showcase-phones  { gap: 8px; padding: 0 12px; }
+    .ag-iphone           { width: min(30vw, 200px); transform: translateY(40px); }
+    .ag-iphone--featured { width: min(33vw, 220px); transform: translateY(0); }
+    .ag-iphone-label     { font-size: 0.55rem; margin-top: 10px; }
 }
 
 @media (max-width: 480px) {
-    .ag-showcase-phones { gap: 6px; }
-    .ag-iphone           { transform: translateY(28px); }
-
-    .ag-showcase-label     { font-size: 0.5rem; letter-spacing: 0.04em; }
-    .ag-showcase-labels    { gap: 6px; margin-top: 8px; }
+    .ag-showcase-phones  { gap: 4px; padding: 0 8px; }
+    .ag-iphone           { width: 29vw; transform: translateY(28px); }
+    .ag-iphone--featured { width: 32vw; }
+    .ag-iphone-label     { font-size: 0.48rem; letter-spacing: 0.04em; margin-top: 8px; }
 }
