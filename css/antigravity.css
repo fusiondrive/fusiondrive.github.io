@@ -928,12 +928,16 @@ img {
    17. CABSFLIGHT SHOWCASE - Featured Project Scroll Animation
    ========================================================================== */
 
-/* ── Showcase section — natural height, no scrub padding ── */
+/* ── Showcase section — full-screen immersive, content centered ── */
 .ag-showcase {
     position: relative;
     z-index: 20;
-    padding: var(--ag-gap-lg) 0;
-    /* height: auto — content defines it */
+    min-height: 100vh;
+    min-height: 100svh;           /* mobile-safe: excludes browser chrome */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: max(48px, 8vh) 0;    /* breathing room on extreme aspect ratios */
 }
 
 /* ── Stage — normal flow, vertically centered content ── */
