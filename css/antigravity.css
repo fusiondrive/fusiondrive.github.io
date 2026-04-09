@@ -923,3 +923,193 @@ img {
     padding: 2px 6px;
     border-radius: 4px;
 }
+
+/* ==========================================================================
+   17. CABSFLIGHT SHOWCASE - Featured Project Scroll Animation
+   ========================================================================== */
+
+/* ── Showcase section — natural height, no scrub padding ── */
+.ag-showcase {
+    position: relative;
+    z-index: 20;
+    padding: var(--ag-gap-lg) 0;
+    /* height: auto — content defines it */
+}
+
+/* ── Stage — normal flow, vertically centered content ── */
+.ag-showcase-stage {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+    padding: 0 var(--ag-gap);
+    text-align: center;
+}
+
+/* ── Meta tags row ── */
+.ag-showcase-meta {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+/* ── Title ── */
+.ag-showcase-title {
+    margin-bottom: 14px;
+    color: var(--ag-text-primary);
+}
+
+/* ── Subtitle ── */
+.ag-showcase-sub {
+    max-width: 520px;
+    margin: 0 auto 8px;
+    color: var(--ag-text-secondary);
+}
+
+/* ── Phone wrapper — Flexbox podium (side-by-side, center elevated) ── */
+.ag-showcase-phones {
+    display: flex;
+    align-items: flex-end;       /* bottom-aligned; podium offset via transform */
+    justify-content: center;
+    gap: clamp(12px, 2vw, 28px); /* responsive gap between phones */
+    width: 100%;
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 0 var(--ag-gap);
+    /* No fixed height — phones define it via aspect-ratio */
+}
+
+/* ── iPhone mockup — image-based (PNGs include full device bezel) ── */
+.ag-iphone {
+    flex: 0 0 auto;
+    width: clamp(200px, 22vw, 320px);  /* scales from 200px → 320px */
+    aspect-ratio: 1046 / 2066;
+    will-change: transform, opacity;
+    /* Podium offset — side phones sit 60px lower */
+    transform: translateY(60px);
+    /* drop-shadow traces the PNG alpha contour */
+    filter:
+        drop-shadow(0 28px 48px rgba(0, 0, 0, 0.50))
+        drop-shadow(0 10px 18px rgba(0, 0, 0, 0.28));
+}
+
+/* Center phone — elevated (no Y offset), slightly larger, stronger shadow */
+.ag-iphone--featured {
+    width: clamp(220px, 24vw, 350px);
+    transform: translateY(0);
+    z-index: 2;
+    filter:
+        drop-shadow(0 36px 58px rgba(0, 0, 0, 0.60))
+        drop-shadow(0 14px 22px rgba(0, 0, 0, 0.32))
+        drop-shadow(0 0 32px rgba(67, 233, 123, 0.06));
+}
+
+/* Light-mode — softer shadows */
+@media (prefers-color-scheme: light) {
+    .ag-iphone {
+        filter:
+            drop-shadow(0 28px 48px rgba(0, 0, 0, 0.16))
+            drop-shadow(0 10px 18px rgba(0, 0, 0, 0.08));
+    }
+
+    .ag-iphone--featured {
+        filter:
+            drop-shadow(0 36px 58px rgba(0, 0, 0, 0.22))
+            drop-shadow(0 14px 22px rgba(0, 0, 0, 0.10))
+            drop-shadow(0 0 32px rgba(67, 233, 123, 0.04));
+    }
+}
+
+/* Screenshot image */
+.ag-iphone-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+/* ── Phone labels (sit beneath each phone column) ── */
+.ag-showcase-labels {
+    display: flex;
+    justify-content: center;
+    gap: clamp(12px, 2vw, 28px); /* mirror phones gap */
+    width: 100%;
+    max-width: 1140px;
+    margin: 12px auto 0;
+    padding: 0 var(--ag-gap);
+    pointer-events: none;
+}
+
+.ag-showcase-label {
+    flex: 0 0 auto;
+    width: clamp(200px, 22vw, 320px); /* match side phone width */
+    text-align: center;
+    font-family: var(--ag-font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ag-text-dim);
+}
+
+.ag-showcase-label--c {
+    width: clamp(220px, 24vw, 350px); /* match center phone width */
+    color: var(--ag-text-secondary);
+    font-weight: 500;
+}
+
+/* ── CTA button — portfolio style ── */
+.ag-showcase-cta {
+    margin-top: 16px;
+    z-index: 10;
+}
+
+.ag-showcase-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 24px;
+    font-family: var(--ag-font-mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ag-text-secondary);
+    background: var(--ag-surface-glass);
+    border: 1px solid var(--ag-border-hairline);
+    border-radius: var(--ag-radius-nav);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    text-decoration: none;
+    transition: border-color var(--ag-duration-fast) var(--ag-ease-out),
+                color var(--ag-duration-fast) var(--ag-ease-out),
+                transform 0.2s var(--ag-ease-out);
+}
+
+.ag-showcase-btn:hover {
+    border-color: var(--ag-border-hairline-hover);
+    color: var(--ag-text-primary);
+    transform: scale(1.03);
+}
+
+/* ── Responsive — Phones ── */
+@media (max-width: 768px) {
+    .ag-iphone           { transform: translateY(40px); }
+    .ag-iphone--featured { transform: translateY(0); }
+
+    .ag-showcase-label     { font-size: 0.55rem; }
+}
+
+@media (max-width: 480px) {
+    .ag-showcase-phones { gap: 6px; }
+    .ag-iphone           { transform: translateY(28px); }
+
+    .ag-showcase-label     { font-size: 0.5rem; letter-spacing: 0.04em; }
+    .ag-showcase-labels    { gap: 6px; margin-top: 8px; }
+}

@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CABSFlight — The Next Generation of Campus Transit</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --blue:    #4facfe;
+      --teal:    #00f2fe;
+      --green:   #43e97b;
+      --purple:  #f093fb;
+      --bg:      #04040a;
+      --dim:     rgba(255,255,255,0.42);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display',
+                   'Helvetica Neue', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ───────────────────────────── HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 100px 24px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ambient glow */
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 44%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 900px;
+      height: 900px;
+      background: radial-gradient(circle, rgba(79,172,254,.07) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 22px;
+      opacity: 0;
+      animation: riseUp .9s cubic-bezier(.22,1,.36,1) .15s forwards;
+    }
+
+    .hero-title {
+      font-size: clamp(44px, 6.5vw, 88px);
+      font-weight: 700;
+      line-height: 1.07;
+      letter-spacing: -.035em;
+      margin-bottom: 26px;
+      opacity: 0;
+      animation: riseUp .9s cubic-bezier(.22,1,.36,1) .35s forwards;
+    }
+
+    .grad {
+      background: linear-gradient(135deg, var(--blue) 0%, var(--teal) 45%, var(--green) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: clamp(16px, 1.8vw, 20px);
+      font-weight: 400;
+      color: var(--dim);
+      max-width: 520px;
+      line-height: 1.6;
+      opacity: 0;
+      animation: riseUp .9s cubic-bezier(.22,1,.36,1) .55s forwards;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 40px;
+      opacity: 0;
+      animation: riseUp .9s cubic-bezier(.22,1,.36,1) .72s forwards;
+    }
+
+    .btn {
+      padding: 13px 30px;
+      border-radius: 50px;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: transform .18s, opacity .18s;
+    }
+    .btn:hover { transform: scale(1.04); opacity: .9; }
+
+    .btn-fill   { background: var(--blue); color: #000; }
+    .btn-ghost  {
+      background: rgba(255,255,255,.07);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,.13);
+      backdrop-filter: blur(12px);
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 36px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      opacity: 0;
+      animation: riseUp 1s ease 1.3s forwards;
+    }
+    .scroll-hint span {
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.25);
+    }
+    .chevron {
+      width: 16px;
+      height: 16px;
+      border-right: 1.5px solid rgba(255,255,255,.25);
+      border-bottom: 1.5px solid rgba(255,255,255,.25);
+      transform: rotate(45deg);
+      animation: bob 1.8s ease-in-out infinite;
+    }
+
+    /* ───────────────────────────── SCROLL SHOWCASE */
+    .showcase {
+      height: 360vh;
+      position: relative;
+    }
+
+    .stage {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .stage-label {
+      position: absolute;
+      top: 58px;
+      font-size: 11px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.3);
+      pointer-events: none;
+    }
+
+    .phones-wrap {
+      position: relative;
+      width: 760px;
+      height: 540px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ───────────────────────────── iPHONE BASE */
+    .iphone {
+      position: absolute;
+      width: 232px;
+      height: 492px;
+      border-radius: 54px;
+      background: #0c0c0f;
+      border: 1.5px solid rgba(255,255,255,.09);
+      box-shadow:
+        0 0 0 1px rgba(0,0,0,.95),
+        0 48px 80px -12px rgba(0,0,0,.92),
+        0 20px 32px rgba(0,0,0,.5),
+        inset 0 .5px 0 rgba(255,255,255,.11);
+      overflow: hidden;
+      will-change: transform, opacity;
+    }
+
+    .iphone-screen {
+      position: absolute;
+      inset: 0;
+      border-radius: 53px;
+      overflow: hidden;
+    }
+
+    /* Dynamic Island */
+    .di {
+      position: absolute;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 35px;
+      background: #000;
+      border-radius: 22px;
+      z-index: 10;
+    }
+
+    /* Physical buttons */
+    .b-right { position: absolute; right: -2px; top: 132px;  width: 3px; height: 68px; background: #1c1c1c; border-radius: 0 2px 2px 0; }
+    .b-s     { position: absolute; left: -2px;  top: 84px;   width: 3px; height: 36px; background: #1c1c1c; border-radius: 2px 0 0 2px; }
+    .b-v1    { position: absolute; left: -2px;  top: 140px;  width: 3px; height: 50px; background: #1c1c1c; border-radius: 2px 0 0 2px; }
+    .b-v2    { position: absolute; left: -2px;  top: 202px;  width: 3px; height: 50px; background: #1c1c1c; border-radius: 2px 0 0 2px; }
+
+    /* Screen content scaffold */
+    .screen-shine {
+      position: absolute;
+      top: -28%;
+      left: -18%;
+      width: 140%;
+      height: 52%;
+      background: linear-gradient(165deg, rgba(255,255,255,.055) 0%, transparent 70%);
+      transform: rotate(-6deg);
+      pointer-events: none;
+    }
+
+    .screen-body {
+      position: absolute;
+      inset: 0;
+      padding: 70px 18px 26px;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .glass-bar {
+      background: rgba(255,255,255,.07);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 20px;
+      padding: 14px 16px;
+    }
+
+    .accent-chip { height: 3px; border-radius: 2px; margin-bottom: 10px; width: 44px; }
+    .sk { height: 7px; background: rgba(255,255,255,.22); border-radius: 4px; margin-bottom: 7px; }
+    .sk.w70 { width: 70%; }
+    .sk.w50 { width: 50%; background: rgba(255,255,255,.11); margin-bottom: 0; }
+
+    .glass-row {
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 16px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .row-icon { width: 32px; height: 32px; border-radius: 10px; flex-shrink: 0; }
+    .row-lines { flex: 1; }
+    .row-lines .sk { margin-bottom: 5px; }
+
+    .glass-nav {
+      margin-top: auto;
+      background: rgba(255,255,255,.06);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 22px;
+      padding: 14px 18px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+    }
+
+    .ni { width: 22px; height: 22px; border-radius: 7px; background: rgba(255,255,255,.18); }
+    .ni.active { opacity: 1; }
+
+    /* phone-specific z-index */
+    #ph-left   { z-index: 1; }
+    #ph-center { z-index: 3; border-color: rgba(255,255,255,.18);
+                 box-shadow: 0 0 0 1px rgba(0,0,0,.95), 0 60px 100px -12px rgba(0,0,0,.97),
+                             0 0 55px rgba(67,233,123,.09), inset 0 .5px 0 rgba(255,255,255,.2); }
+    #ph-right  { z-index: 1; }
+
+    /* phone labels */
+    #phone-labels {
+      position: absolute;
+      bottom: 56px;
+      display: flex;
+      gap: 128px;
+      opacity: 0;
+      pointer-events: none;
+    }
+    #phone-labels span   { font-size: 12px; color: rgba(255,255,255,.38); letter-spacing: .4px; }
+    #phone-labels .c     { color: rgba(255,255,255,.72); font-weight: 500; }
+
+    /* ───────────────────────────── FEATURES */
+    .features {
+      padding: 130px 24px 100px;
+      text-align: center;
+      position: relative;
+    }
+    .features::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 50%; transform: translateX(-50%);
+      width: 1px; height: 80px;
+      background: linear-gradient(180deg, transparent, rgba(255,255,255,.12));
+    }
+
+    .features h2 {
+      font-size: clamp(34px, 4vw, 54px);
+      font-weight: 700;
+      letter-spacing: -.025em;
+      line-height: 1.12;
+      margin-bottom: 72px;
+    }
+
+    .feat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
+      max-width: 920px;
+      margin: 0 auto;
+    }
+
+    .feat-card {
+      background: rgba(255,255,255,.025);
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 26px;
+      padding: 34px 28px;
+      text-align: left;
+      transition: background .3s, border-color .3s, transform .3s;
+    }
+    .feat-card:hover {
+      background: rgba(255,255,255,.045);
+      border-color: rgba(255,255,255,.12);
+      transform: translateY(-4px);
+    }
+    .feat-icon { font-size: 34px; margin-bottom: 18px; }
+    .feat-card h3 { font-size: 18px; font-weight: 600; margin-bottom: 10px; }
+    .feat-card p  { font-size: 14px; color: var(--dim); line-height: 1.65; }
+
+    /* ───────────────────────────── FOOTER */
+    footer {
+      padding: 52px 24px;
+      text-align: center;
+      font-size: 13px;
+      color: rgba(255,255,255,.18);
+      border-top: 1px solid rgba(255,255,255,.05);
+    }
+
+    /* ───────────────────────────── KEYFRAMES */
+    @keyframes riseUp {
+      from { opacity: 0; transform: translateY(26px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes bob {
+      0%,100% { transform: rotate(45deg) translateY(0); }
+      50%      { transform: rotate(45deg) translateY(6px); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══ HERO ════════════════════════════════════════════ -->
+  <section class="hero">
+    <p class="eyebrow">Now Available on iOS</p>
+    <h1 class="hero-title">
+      CABSFlight.<br>
+      <span class="grad">The Next Generation</span><br>
+      of Campus Transit.
+    </h1>
+    <p class="hero-sub">
+      Real-time tracking, smart routes, and seamless navigation —
+      all in one beautifully designed app.
+    </p>
+    <div class="hero-actions">
+      <button class="btn btn-fill">Download on App Store</button>
+      <button class="btn btn-ghost">Learn More ↓</button>
+    </div>
+    <div class="scroll-hint">
+      <span>Scroll</span>
+      <div class="chevron"></div>
+    </div>
+  </section>
+
+  <!-- ══ SCROLL SHOWCASE ══════════════════════════════════ -->
+  <section class="showcase" id="showcase">
+    <div class="stage">
+      <p class="stage-label">Designed for every journey</p>
+
+      <div class="phones-wrap" id="phones-wrap">
+
+        <!-- ── Phone Left · Smart Routes ── -->
+        <div class="iphone" id="ph-left">
+          <div class="b-s"></div><div class="b-v1"></div><div class="b-v2"></div>
+          <div class="b-right"></div>
+          <div class="di"></div>
+          <div class="iphone-screen">
+            <div style="position:absolute;inset:0;background:linear-gradient(148deg,#0d1b3e 0%,#1a237e 55%,#0d47a1 100%);"></div>
+            <div class="screen-shine"></div>
+            <div class="screen-body">
+              <div class="glass-bar">
+                <div class="accent-chip" style="background:var(--blue);"></div>
+                <div class="sk w70"></div>
+                <div class="sk w50"></div>
+              </div>
+              <div class="glass-row">
+                <div class="row-icon" style="background:linear-gradient(135deg,#4facfe,#00c6fb);"></div>
+                <div class="row-lines">
+                  <div class="sk" style="width:65%;"></div>
+                  <div class="sk" style="width:44%;background:rgba(255,255,255,.1);margin-bottom:0;"></div>
+                </div>
+              </div>
+              <div class="glass-row" style="opacity:.65;">
+                <div class="row-icon" style="background:rgba(79,172,254,.22);"></div>
+                <div class="row-lines">
+                  <div class="sk" style="width:54%;"></div>
+                  <div class="sk" style="width:36%;background:rgba(255,255,255,.1);margin-bottom:0;"></div>
+                </div>
+              </div>
+              <div class="glass-nav">
+                <div class="ni active" style="background:var(--blue);opacity:.9;"></div>
+                <div class="ni"></div><div class="ni"></div><div class="ni"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Phone Center · Live Tracking ── -->
+        <div class="iphone" id="ph-center">
+          <div class="b-s"></div><div class="b-v1"></div><div class="b-v2"></div>
+          <div class="b-right"></div>
+          <div class="di"></div>
+          <div class="iphone-screen">
+            <div style="position:absolute;inset:0;background:linear-gradient(148deg,#061e0f 0%,#1b5e20 48%,#004d40 100%);"></div>
+            <div class="screen-shine"></div>
+            <div class="screen-body">
+              <div class="glass-bar">
+                <div class="accent-chip" style="background:var(--green);"></div>
+                <div class="sk w70"></div>
+                <div class="sk w50"></div>
+              </div>
+              <div class="glass-row">
+                <div class="row-icon" style="background:linear-gradient(135deg,#43e97b,#38f9d7);"></div>
+                <div class="row-lines">
+                  <div class="sk" style="width:65%;"></div>
+                  <div class="sk" style="width:44%;background:rgba(255,255,255,.1);margin-bottom:0;"></div>
+                </div>
+              </div>
+              <div class="glass-row" style="opacity:.7;">
+                <div class="row-icon" style="background:rgba(67,233,123,.22);"></div>
+                <div class="row-lines">
+                  <div class="sk" style="width:54%;"></div>
+                  <div class="sk" style="width:36%;background:rgba(255,255,255,.1);margin-bottom:0;"></div>
+                </div>
+              </div>
+              <div class="glass-row" style="opacity:.45;">
+                <div class="row-icon" style="background:rgba(67,233,123,.14);"></div>
+                <div class="row-lines">
+                  <div class="sk" style="width:60%;"></div>
+                  <div class="sk" style="width:40%;background:rgba(255,255,255,.1);margin-bottom:0;"></div>
+                </div>
+              </div>
+              <div class="glass-nav">
+                <div class="ni"></div>
+                <div class="ni active" style="background:var(--green);opacity:.9;"></div>
+                <div class="ni"></div><div class="ni"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Phone Right · Campus Map ── -->
+        <div class="iphone" id="ph-right">
+          <div class="b-s"></div><div class="b-v1"></div><div class="b-v2"></div>
+          <div class="b-right"></div>
+          <div class="di"></div>
+          <div class="iphone-screen">
+            <div style="position:absolute;inset:0;background:linear-gradient(148deg,#1a0a2e 0%,#4a148c 52%,#6a1b9a 100%);"></div>
+            <div class="screen-shine"></div>
+            <div class="screen-body">
+              <div class="glass-bar">
+                <div class="accent-chip" style="background:var(--purple);"></div>
+                <div class="sk w70"></div>
+                <div class="sk w50"></div>
+              </div>
+              <div class="glass-row">
+                <div class="row-icon" style="background:linear-gradient(135deg,#f093fb,#f5576c);"></div>
+                <div class="row-lines">
+                  <div class="sk" style="width:65%;"></div>
+                  <div class="sk" style="width:44%;background:rgba(255,255,255,.1);margin-bottom:0;"></div>
+                </div>
+              </div>
+              <div class="glass-row" style="opacity:.65;">
+                <div class="row-icon" style="background:rgba(240,147,251,.22);"></div>
+                <div class="row-lines">
+                  <div class="sk" style="width:54%;"></div>
+                  <div class="sk" style="width:36%;background:rgba(255,255,255,.1);margin-bottom:0;"></div>
+                </div>
+              </div>
+              <div class="glass-nav">
+                <div class="ni"></div><div class="ni"></div><div class="ni"></div>
+                <div class="ni active" style="background:var(--purple);opacity:.9;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /.phones-wrap -->
+
+      <div id="phone-labels">
+        <span>Smart Routes</span>
+        <span class="c">Live Tracking</span>
+        <span>Campus Map</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ FEATURES ══════════════════════════════════════════ -->
+  <section class="features">
+    <h2>Everything you need,<br><span class="grad">right on campus.</span></h2>
+    <div class="feat-grid">
+      <div class="feat-card">
+        <div class="feat-icon">🛣️</div>
+        <h3>Smart Routes</h3>
+        <p>AI-powered route suggestions that adapt to your class schedule and live CABS data in real time.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">📍</div>
+        <h3>Live Tracking</h3>
+        <p>Know exactly where your bus is, down to the second. No more guessing or missing your ride across campus.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🗺️</div>
+        <h3>Campus Map</h3>
+        <p>An interactive overlay showing every stop, building, and point of interest — all in one elegant view.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2026 CABSFlight &nbsp;·&nbsp; Designed with ❤️ for campus life</p>
+  </footer>
+
+  <!-- ══ GSAP ══════════════════════════════════════════════ -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    const pL = document.getElementById('ph-left');
+    const pC = document.getElementById('ph-center');
+    const pR = document.getElementById('ph-right');
+    const labels = document.getElementById('phone-labels');
+
+    /* ── Initial state: phones stacked in a tight cluster below stage ── */
+    gsap.set([pL, pC, pR], {
+      y: 640,
+      x: 0,
+      rotation: 0,
+      scale: 0.86,
+      opacity: 0,
+      transformOrigin: 'bottom center',
+    });
+
+    /* ── Main scroll timeline ── */
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: '#showcase',
+        start: 'top top',      // pin starts when showcase hits top
+        end: 'bottom bottom',  // release when showcase bottom passes viewport
+        scrub: 1.6,            // number = seconds lag → spring-like trailing feel
+      },
+    });
+
+    /* Phase 1 (0 → 0.28): Phones rise as one cluster */
+    tl.to([pL, pC, pR], {
+      y: 70,
+      scale: 0.90,
+      opacity: 1,
+      duration: 0.28,
+      ease: 'power3.out',
+      stagger: 0.03,
+    }, 0);
+
+    /* Phase 2 (0.24 → 0.68): Fan out with spring overshoot */
+    tl.to(pL, {
+      x: -250,
+      y: 38,
+      rotation: -13,
+      scale: 0.91,
+      duration: 0.44,
+      ease: 'back.out(1.3)',
+    }, 0.24);
+
+    tl.to(pC, {
+      x: 0,
+      y: -2,
+      rotation: 0,
+      scale: 1.06,
+      duration: 0.44,
+      ease: 'back.out(1.15)',
+    }, 0.24);
+
+    tl.to(pR, {
+      x: 250,
+      y: 38,
+      rotation: 13,
+      scale: 0.91,
+      duration: 0.44,
+      ease: 'back.out(1.3)',
+    }, 0.24);
+
+    /* Labels fade in */
+    tl.to(labels, {
+      opacity: 1,
+      duration: 0.18,
+      ease: 'power2.out',
+    }, 0.52);
+
+    /* Phase 3 (0.68 → 1): Gentle settle — center floats up a touch */
+    tl.to(pC, {
+      y: -14,
+      scale: 1.08,
+      duration: 0.32,
+      ease: 'power1.inOut',
+    }, 0.68);
+
+    tl.to([pL, pR], {
+      y: 50,
+      duration: 0.32,
+      ease: 'power1.inOut',
+    }, 0.68);
+  </script>
+</body>
+</html>

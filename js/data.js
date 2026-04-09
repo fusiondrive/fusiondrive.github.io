@@ -24,6 +24,59 @@ export const pages = {
                 <p class="ag-mono ag-hero-subtitle">ENGINEERING REALITY</p>
             </header>
 
+            <!-- ═══ CABSFlight Showcase — Featured Project ═══ -->
+            <section id="cabsflight-showcase" class="ag-showcase">
+                <div class="ag-showcase-stage">
+
+                    <!-- Tech stack tags (JetBrains Mono, Antigravity metadata style) -->
+                    <div class="ag-showcase-meta ag-reveal">
+                        <span class="ag-tag">iOS 26</span>
+                        <span class="ag-tag">SwiftData</span>
+                        <span class="ag-tag">Liquid Glass</span>
+                    </div>
+
+                    <h2 class="ag-display ag-display-lg ag-showcase-title ag-reveal">CABSFlight</h2>
+                    <p class="ag-body ag-body-lg ag-showcase-sub ag-reveal">
+                        Next-generation campus transit — real-time tracking, smart routes,
+                        and seamless navigation built with iOS&nbsp;26 Liquid Glass.
+                    </p>
+
+                    <!-- 3 iPhone Mockups (animated by showcase.controller.js) -->
+                    <div class="ag-showcase-phones" id="phones-wrap">
+
+                        <!-- ── Phone Left · Onboarding ── -->
+                        <div class="ag-iphone" id="ph-left">
+                            <img src="assets/CABSF/boarding1.png" alt="CABSFlight — Welcome onboarding screen" class="ag-iphone-img" draggable="false">
+                        </div>
+
+                        <!-- ── Phone Center · Live Map ── -->
+                        <div class="ag-iphone ag-iphone--featured" id="ph-center">
+                            <img src="assets/CABSF/inapp.png" alt="CABSFlight — Live bus tracking map" class="ag-iphone-img" draggable="false">
+                        </div>
+
+                        <!-- ── Phone Right · Route Picker ── -->
+                        <div class="ag-iphone" id="ph-right">
+                            <img src="assets/CABSF/boarding2.png" alt="CABSFlight — Choose your bus lines" class="ag-iphone-img" draggable="false">
+                        </div>
+
+                    </div><!-- /.ag-showcase-phones -->
+
+                    <!-- Phone feature labels (flex widths mirror each phone column) -->
+                    <div id="phone-labels" class="ag-showcase-labels">
+                        <span class="ag-showcase-label">Onboarding</span>
+                        <span class="ag-showcase-label ag-showcase-label--c">Live Tracking</span>
+                        <span class="ag-showcase-label">Route Picker</span>
+                    </div>
+
+                    <!-- Portfolio CTA -->
+                    <div class="ag-showcase-cta">
+                        <a href="https://github.com/fusiondrive" target="_blank" rel="noopener" class="ag-showcase-btn">
+                            View on GitHub ↗
+                        </a>
+                    </div>
+                </div>
+            </section>
+
             <!-- Work Section - Bento Grid -->
             <section id="work" class="ag-section">
                 <header class="ag-section-header">

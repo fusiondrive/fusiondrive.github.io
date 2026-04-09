@@ -5,6 +5,7 @@
 
 import { pages } from './data.js';
 import { initTypewriter } from './typewriter.controller.js';
+import { initShowcase } from './showcase.controller.js';
 
 // DOM reference
 const appView = document.getElementById('app-view');
@@ -70,9 +71,11 @@ function render() {
         // Trigger scroll reveal animations
         initScrollReveal();
 
-        // Initialize typewriter for home page
+        // Initialize typewriter + showcase for home page
         if (pageKey === 'home') {
             initTypewriter();
+            // Delay showcase init one frame so DOM layout settles
+            requestAnimationFrame(() => initShowcase());
         }
 
         // Fade in new content
