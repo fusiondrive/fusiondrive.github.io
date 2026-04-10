@@ -2,13 +2,15 @@
  * CABSFlight Showcase — GSAP ScrollTrigger Controller
  *
  * Layout:  Flexbox "podium" — 3 phones side-by-side, center elevated.
- * Anim:    Asymmetric bottom-to-center push with:
- *            • center-first stagger (manual timeline offsets)
- *            • per-phone randomised ease
- *            • scroll-scrubbed (scrub: 1) — phones follow scroll
+ * Anim:    Micro-interaction — subtle fade + small Y shift:
+ *            • INITIAL_Y = 80px (not hundreds) → "materialise in place"
+ *            • opacity 0→1 carries the visual weight
+ *            • center-first stagger via manual timeline offsets
+ *            • per-phone randomised ease for organic feel
+ *            • scrub: 0.5 — tight, responsive finger-tracking
  *
- * Trigger: tight scroll interval from "top 80%" to "center 45%"
- *          on #phones-wrap. No pin, no sticky — pure scrub.
+ * Trigger: "top 80%" → "center 50%" on #phones-wrap.
+ *          No pin. No sticky. No toggleActions.
  *
  * Relies on window.gsap & window.ScrollTrigger loaded via CDN.
  * Called by router.js after the home view is injected into the DOM.
@@ -16,16 +18,11 @@
 
 /* ── Helpers ───────────────────────────────────────────── */
 
-function rand(min, max) {
-    return Math.random() * (max - min) + min;
-}
-
 function randomEase() {
     const pool = [
+        'power2.out',
         'power3.out',
-        'power4.out',
-        'back.out(1.0)',
-        'back.out(1.4)',
+        'sine.out',
         'circ.out',
     ];
     return pool[Math.floor(Math.random() * pool.length)];
@@ -63,85 +60,57 @@ export function initShowcase() {
     const podium = getPodiumConfig();
 
     /* ─────────────────────────────────────────────────────
-     * INITIAL STATE
-     * Push phones 420px below their podium resting position,
-     * fully transparent, slightly scaled down.
-     * Labels live inside each .ag-iphone, so they move
-     * automatically with the parent's transform.
-     * ───────────────────────────────────────────────────── */
-    const INITIAL_Y = 420;
-
-    gsap.set(pL, { y: podium.sideY + INITIAL_Y, opacity: 0, scale: 0.90 });
-    gsap.set(pC, { y: 0            + INITIAL_Y, opacity: 0, scale: 0.90 });
-    gsap.set(pR, { y: podium.sideY + INITIAL_Y, opacity: 0, scale: 0.90 });
-
-    /* ─────────────────────────────────────────────────────
-     * PER-PHONE RANDOMISED CONFIGS
+     * INITIAL STATE — Micro-interaction approach
      *
-     * scrub 模式下 duration 只决定时间轴内各 tween 的
-     * 相对权重，不再对应真实秒数。统一用 0.5 保持均匀，
-     * 差异化靠 ease 和 stagger offset 体现。
+     * 只下移 80px + 全透明，不缩放。
+     * 视觉效果：手机从"虚无"中原地浮现，
+     * 而非从画面外飞入。
      * ───────────────────────────────────────────────────── */
-    const cfgC = { dur: 0.5, ease: randomEase() };  // center
-    const cfgL = { dur: 0.5, ease: randomEase() };  // left
-    const cfgR = { dur: 0.5, ease: randomEase() };  // right
+    const INITIAL_Y = 80;
+
+    gsap.set(pL, { y: podium.sideY + INITIAL_Y, opacity: 0 });
+    gsap.set(pC, { y: 0            + INITIAL_Y, opacity: 0 });
+    gsap.set(pR, { y: podium.sideY + INITIAL_Y, opacity: 0 });
 
     /* ─────────────────────────────────────────────────────
      * SCROLL-SCRUBBED TIMELINE
      *
-     *  ① scrub: 1          — 手机跟随滚轮进度，1s 平滑缓冲
-     *  ② start: "top 80%"  — 容器顶部到达视口 80% 时开始
-     *  ③ end: "center 45%"  — 容器中点到达视口 45% 时完成
-     *     → 紧凑触发区间，不拖沓
-     *  ④ 无 pin / toggleActions — 不会产生粘滞或空白
+     *  scrub: 0.5   — 比 1 更紧的跟手，移动端丝滑
+     *  start/end    — 紧凑区间，80px 位移一划即完成
+     *  无 pin / toggleActions / scale
      * ───────────────────────────────────────────────────── */
     const tl = gsap.timeline({
         scrollTrigger: {
             trigger: '#phones-wrap',
             start: 'top 80%',
-            end: 'center 45%',
-            scrub: 1,
+            end:   'center 50%',
+            scrub: 0.5,
         },
     });
 
-    /*
-     * CENTER PHONE — fires first (position 0)
-     */
+    /* CENTER — position 0, 先浮现 */
     tl.to(pC, {
         y: 0,
         opacity: 1,
-        scale: 1,
-        duration: cfgC.dur,
-        ease: cfgC.ease,
+        duration: 0.5,
+        ease: randomEase(),
     }, 0);
 
-    /*
-     * LEFT PHONE — offset 0.10 after center in timeline units
-     */
+    /* LEFT — offset 0.08, 微微滞后 */
     tl.to(pL, {
         y: podium.sideY,
         opacity: 1,
-        scale: 1,
-        duration: cfgL.dur,
-        ease: cfgL.ease,
-    }, 0.10);
+        duration: 0.5,
+        ease: randomEase(),
+    }, 0.08);
 
-    /*
-     * RIGHT PHONE — same offset as left
-     */
+    /* RIGHT — 与 LEFT 同步 */
     tl.to(pR, {
         y: podium.sideY,
         opacity: 1,
-        scale: 1,
-        duration: cfgR.dur,
-        ease: cfgR.ease,
-    }, 0.10);
-
-    /*
-     * Labels now live inside each .ag-iphone container,
-     * so they inherit the parent's transform automatically.
-     * No separate tween needed.
-     */
+        duration: 0.5,
+        ease: randomEase(),
+    }, 0.08);
 
     /* ── Resize handler ── */
     let resizeTimer;
