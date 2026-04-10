@@ -938,7 +938,13 @@ img {
     flex-direction: column;
     justify-content: center;
     padding: max(48px, 8vh) 0;
-    overflow-x: hidden;           /* Bug 2 fix: prevent phones from widening page */
+    /* overflow-x removed — body already has overflow-x:hidden.
+       Keeping it here created a new scroll container on mobile,
+       causing nested scrollbar + text clipping into the header. */
+    overflow: visible;
+    /* Opaque backdrop prevents z-index bleed-through from previous
+       sections (hero sticky/fixed elements, nav glass layers). */
+    background-color: var(--ag-bg-void);
 }
 
 /* ── Stage — normal document flow (no sticky, no pinning) ── */
