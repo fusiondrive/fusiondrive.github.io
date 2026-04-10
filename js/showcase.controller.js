@@ -4,12 +4,11 @@
  * Layout:  Flexbox "podium" — 3 phones side-by-side, center elevated.
  * Anim:    Asymmetric bottom-to-center push with:
  *            • center-first stagger (manual timeline offsets)
- *            • per-phone randomised duration & ease
- *            • trigger-once auto-play (NOT scrub-bound)
+ *            • per-phone randomised ease
+ *            • scroll-scrubbed (scrub: 1) — phones follow scroll
  *
- * Trigger: when the section scrolls into view (~60% of viewport),
- *          the timeline plays automatically in ~1 s.
- *          Scrolling back up reverses it.
+ * Trigger: tight scroll interval from "top 80%" to "center 45%"
+ *          on #phones-wrap. No pin, no sticky — pure scrub.
  *
  * Relies on window.gsap & window.ScrollTrigger loaded via CDN.
  * Called by router.js after the home view is injected into the DOM.
@@ -79,33 +78,29 @@ export function initShowcase() {
     /* ─────────────────────────────────────────────────────
      * PER-PHONE RANDOMISED CONFIGS
      *
-     * 【改动】duration 区间从 0.48-0.70 提升到 0.8-1.2 秒，
-     * 因为去掉 scrub 后时长由真实秒数决定，需要稍长一些
-     * 才能看起来干脆利落而非一闪而过。
+     * scrub 模式下 duration 只决定时间轴内各 tween 的
+     * 相对权重，不再对应真实秒数。统一用 0.5 保持均匀，
+     * 差异化靠 ease 和 stagger offset 体现。
      * ───────────────────────────────────────────────────── */
-    const cfgC = { dur: rand(0.80, 0.95), ease: randomEase() };  // center (fastest)
-    const cfgL = { dur: rand(0.95, 1.15), ease: randomEase() };  // left
-    const cfgR = { dur: rand(0.95, 1.15), ease: randomEase() };  // right
+    const cfgC = { dur: 0.5, ease: randomEase() };  // center
+    const cfgL = { dur: 0.5, ease: randomEase() };  // left
+    const cfgR = { dur: 0.5, ease: randomEase() };  // right
 
     /* ─────────────────────────────────────────────────────
-     * SCROLL-TRIGGERED AUTO-PLAY TIMELINE
+     * SCROLL-SCRUBBED TIMELINE
      *
-     * 【核心改动】
-     *  ① 移除 scrub              — 不再绑定滚轮进度
-     *  ② 移除 end / markers
-     *  ③ 添加 toggleActions       — 滚入自动播放，滚回自动倒放
-     *  ④ trigger 指向手机容器      — 确保标题已可见后才触发
-     *  ⑤ start: "top 65%"        — 容器顶部到达视口 65% 处触发
-     *                               （用户刚好看完标题和副标题）
+     *  ① scrub: 1          — 手机跟随滚轮进度，1s 平滑缓冲
+     *  ② start: "top 80%"  — 容器顶部到达视口 80% 时开始
+     *  ③ end: "center 45%"  — 容器中点到达视口 45% 时完成
+     *     → 紧凑触发区间，不拖沓
+     *  ④ 无 pin / toggleActions — 不会产生粘滞或空白
      * ───────────────────────────────────────────────────── */
     const tl = gsap.timeline({
         scrollTrigger: {
-            trigger: '#phones-wrap',          // 手机容器，而非整个 section
-            start: 'top 65%',                 // 容器顶部到达视口 65% 处
-            toggleActions: 'play none none reverse',
-            //               ↑    ↑    ↑    ↑
-            //          onEnter  onLeave  onEnterBack  onLeaveBack
-            //          播放      不动      不动         倒放回去
+            trigger: '#phones-wrap',
+            start: 'top 80%',
+            end: 'center 45%',
+            scrub: 1,
         },
     });
 
@@ -121,9 +116,7 @@ export function initShowcase() {
     }, 0);
 
     /*
-     * LEFT PHONE — 0.12s after center
-     * 【改动】stagger 间隔从 0.08 增大到 0.12，
-     * 配合更长的 duration 保持节奏感。
+     * LEFT PHONE — offset 0.10 after center in timeline units
      */
     tl.to(pL, {
         y: podium.sideY,
@@ -131,10 +124,10 @@ export function initShowcase() {
         scale: 1,
         duration: cfgL.dur,
         ease: cfgL.ease,
-    }, 0.12);
+    }, 0.10);
 
     /*
-     * RIGHT PHONE — same 0.12s stagger as left
+     * RIGHT PHONE — same offset as left
      */
     tl.to(pR, {
         y: podium.sideY,
@@ -142,7 +135,7 @@ export function initShowcase() {
         scale: 1,
         duration: cfgR.dur,
         ease: cfgR.ease,
-    }, 0.12);
+    }, 0.10);
 
     /*
      * Labels now live inside each .ag-iphone container,
