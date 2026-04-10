@@ -48,6 +48,18 @@ export function initShowcase() {
 
     gsap.registerPlugin(ScrollTrigger);
 
+    /* ─────────────────────────────────────────────────────
+     * iOS Safari 终极修复
+     *
+     * iOS Safari 滚动时动态工具栏收起/展开会触发 resize，
+     * 导致 ScrollTrigger.refresh() 强制重算所有触发点，
+     * 打断 -webkit-overflow-scrolling 的惯性滚动。
+     * ignoreMobileResize: true 让 ST 忽略这类"假 resize"。
+     * ───────────────────────────────────────────────────── */
+    ScrollTrigger.config({
+        ignoreMobileResize: true,
+    });
+
     // SPA safety — kill previous instances
     ScrollTrigger.getAll().forEach(t => t.kill());
 
@@ -112,10 +124,15 @@ export function initShowcase() {
         ease: randomEase(),
     }, 0.08);
 
-    /* ── Resize handler ── */
-    let resizeTimer;
+    /* ── Resize handler ──
+     * 只在宽度真正变化时（如旋转屏幕）才 refresh，
+     * 忽略 iOS Safari 工具栏收起造成的纯高度变化。
+     */
+    let lastWidth = window.innerWidth;
     window.addEventListener('resize', () => {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(() => ScrollTrigger.refresh(), 250);
+        if (window.innerWidth !== lastWidth) {
+            lastWidth = window.innerWidth;
+            ScrollTrigger.refresh();
+        }
     });
 }
