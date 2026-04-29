@@ -68,7 +68,11 @@ export const pages = {
                     <!-- Portfolio CTA -->
                     <div class="ag-showcase-cta">
                         <a href="https://github.com/fusiondrive" target="_blank" rel="noopener" class="ag-showcase-btn">
-                            View on GitHub ↗
+                            <span class="t-text-swap ag-showcase-btn-label">View on GitHub</span>
+                            <span class="t-icon-swap ag-showcase-btn-icon" data-state="a" aria-hidden="true">
+                                <span class="t-icon" data-icon="a">↗</span>
+                                <span class="t-icon" data-icon="b">↗</span>
+                            </span>
                         </a>
                     </div>
                 </div>

@@ -1111,6 +1111,116 @@ img {
     transform: scale(1.03);
 }
 
+/* ──────────────────────────────────────────────────────────────────────────
+   transitions-dev — Icon swap (09) + Text states swap (04)
+   Applied as a hover micro-interaction layer for .ag-showcase-btn.
+   The button's own transform/border/color transitions above are untouched
+   so the GSAP scroll reveal on .ag-showcase-cta keeps its grip on the
+   wrapping element. Only the inner .t-text-swap and .t-icon-swap inherit
+   blur/scale here.
+   ────────────────────────────────────────────────────────────────────── */
+
+/* Universal install — only the tokens these two snippets need.
+   Safe to merge into a project-wide :root block later. */
+:root {
+    /* Text states swap */
+    --text-swap-dur: 200ms;
+    --text-swap-translate-y: 8px;
+    --text-swap-blur: 2px;
+    --text-swap-ease: ease-out;
+    /* Icon swap */
+    --icon-swap-dur: 200ms;
+    --icon-swap-blur: 2px;
+    --icon-swap-start-scale: 0.25;
+    --icon-swap-ease: ease-in-out;
+}
+
+/* ── Text states swap (verbatim from skill 04) ────────────────────────── */
+.t-text-swap {
+    display: inline-block;
+    transform: translateY(0);
+    filter: blur(0);
+    opacity: 1;
+    transition:
+        transform var(--text-swap-dur) var(--text-swap-ease),
+        filter    var(--text-swap-dur) var(--text-swap-ease),
+        opacity   var(--text-swap-dur) var(--text-swap-ease);
+    will-change: transform, filter, opacity;
+}
+.t-text-swap.is-exit {
+    transform: translateY(calc(var(--text-swap-translate-y) * -1));
+    filter: blur(var(--text-swap-blur));
+    opacity: 0;
+}
+.t-text-swap.is-enter-start {
+    transform: translateY(var(--text-swap-translate-y));
+    filter: blur(var(--text-swap-blur));
+    opacity: 0;
+    transition: none;
+}
+
+/* ── Icon swap (verbatim from skill 09) ───────────────────────────────── */
+.t-icon-swap {
+    position: relative;
+    display: inline-grid;
+}
+.t-icon-swap .t-icon {
+    grid-area: 1 / 1;
+    transition:
+        opacity   var(--icon-swap-dur) var(--icon-swap-ease),
+        filter    var(--icon-swap-dur) var(--icon-swap-ease),
+        transform var(--icon-swap-dur) var(--icon-swap-ease);
+    will-change: opacity, filter, transform;
+}
+.t-icon-swap[data-state="a"] .t-icon[data-icon="a"],
+.t-icon-swap[data-state="b"] .t-icon[data-icon="b"] {
+    opacity: 1;
+    filter: blur(0);
+    transform: scale(1);
+}
+.t-icon-swap[data-state="a"] .t-icon[data-icon="b"],
+.t-icon-swap[data-state="b"] .t-icon[data-icon="a"] {
+    opacity: 0;
+    filter: blur(var(--icon-swap-blur));
+    transform: scale(var(--icon-swap-start-scale));
+}
+
+/* ── Hover bridge — drives the swap via :hover instead of changing
+   data-state. Snippet rules above stay intact; these only override
+   the resting state when the button is hovered.                       ── */
+.ag-showcase-btn:hover .t-icon-swap[data-state="a"] .t-icon[data-icon="a"] {
+    opacity: 0;
+    filter: blur(var(--icon-swap-blur));
+    transform: scale(var(--icon-swap-start-scale));
+}
+.ag-showcase-btn:hover .t-icon-swap[data-state="a"] .t-icon[data-icon="b"] {
+    opacity: 1;
+    filter: blur(0);
+    transform: scale(1);
+}
+
+/* Text — there is no content swap on hover, so we re-use the text-swap
+   tokens (--text-swap-blur / --text-swap-translate-y / --text-swap-ease)
+   inside a single keyframes ripple that mirrors the snippet's three-phase
+   exit → enter-start → enter sequence. The .t-text-swap class itself is
+   left in resting state at all times; the animation runs on top once. */
+@keyframes ag-text-swap-hover {
+      0% { transform: translateY(0);                                       filter: blur(0);                     opacity: 1; }
+     49% { transform: translateY(calc(var(--text-swap-translate-y) * -1)); filter: blur(var(--text-swap-blur)); opacity: 0; }
+     50% { transform: translateY(var(--text-swap-translate-y));            filter: blur(var(--text-swap-blur)); opacity: 0; }
+    100% { transform: translateY(0);                                       filter: blur(0);                     opacity: 1; }
+}
+.ag-showcase-btn:hover .t-text-swap {
+    animation: ag-text-swap-hover calc(var(--text-swap-dur) * 2) var(--text-swap-ease);
+}
+
+/* Required reduced-motion guards (one per snippet). */
+@media (prefers-reduced-motion: reduce) {
+    .t-text-swap     { transition: none !important; }
+    .t-icon-swap .t-icon { transition: none !important; }
+    .ag-showcase-btn:hover .t-text-swap { animation: none !important; }
+}
+
 /* ── Responsive — Phones ── */
 @media (max-width: 768px) {
     .ag-showcase-phones  { gap: 8px; padding: 0 12px; }
