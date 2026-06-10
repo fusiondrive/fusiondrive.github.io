@@ -25,9 +25,32 @@
     --ag-text-secondary: #444746;
     --ag-text-dim: #6B6B6B;
 
-    /* Glass Material */
-    --ag-glass-blur: 20px;
-    --ag-card-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+    /* Glass Material — Liquid Glass */
+    --ag-glass-blur: 24px;
+    --ag-glass-saturate: 170%;
+    --ag-glass-fill: linear-gradient(180deg,
+        rgba(255, 255, 255, 0.66) 0%,
+        rgba(255, 255, 255, 0.48) 100%);
+    --ag-glass-edge: rgba(255, 255, 255, 0.45);
+    --ag-glass-border-gradient: linear-gradient(135deg,
+        rgba(255, 255, 255, 0.85) 0%,
+        rgba(255, 255, 255, 0.20) 35%,
+        rgba(0, 0, 0, 0.05) 65%,
+        rgba(255, 255, 255, 0.50) 100%);
+    --ag-glass-sheen: linear-gradient(180deg,
+        rgba(255, 255, 255, 0.35) 0%,
+        rgba(255, 255, 255, 0) 16%);
+    --ag-glass-inner-glow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.65),
+        inset 0 0 24px rgba(255, 255, 255, 0.18);
+    --ag-card-shadow:
+        0 1px 2px rgba(0, 0, 0, 0.04),
+        0 8px 24px rgba(0, 0, 0, 0.06),
+        0 24px 64px rgba(0, 0, 0, 0.05);
+    --ag-card-shadow-hover:
+        0 2px 4px rgba(0, 0, 0, 0.05),
+        0 12px 32px rgba(0, 0, 0, 0.08),
+        0 32px 80px rgba(0, 0, 0, 0.07);
 
     /* Nav Glass - Light */
     --ag-nav-bg: rgba(255, 255, 255, 0.70);
@@ -94,8 +117,30 @@
         --ag-text-secondary: #A3A3A3;
         --ag-text-dim: #808080;
 
-        /* Glass Material - no shadow in dark mode */
-        --ag-card-shadow: none;
+        /* Glass Material — Liquid Glass (Obsidian) */
+        --ag-glass-saturate: 140%;
+        --ag-glass-fill: linear-gradient(180deg,
+            rgba(255, 255, 255, 0.07) 0%,
+            rgba(255, 255, 255, 0.03) 100%);
+        --ag-glass-edge: rgba(255, 255, 255, 0.10);
+        --ag-glass-border-gradient: linear-gradient(135deg,
+            rgba(255, 255, 255, 0.32) 0%,
+            rgba(255, 255, 255, 0.06) 35%,
+            rgba(255, 255, 255, 0.02) 65%,
+            rgba(255, 255, 255, 0.16) 100%);
+        --ag-glass-sheen: linear-gradient(180deg,
+            rgba(255, 255, 255, 0.09) 0%,
+            rgba(255, 255, 255, 0) 18%);
+        --ag-glass-inner-glow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.12),
+            inset 0 0 32px rgba(255, 255, 255, 0.03);
+        /* Depth reads as darkness-on-dark; kept soft */
+        --ag-card-shadow:
+            0 8px 24px rgba(0, 0, 0, 0.35),
+            0 24px 64px rgba(0, 0, 0, 0.30);
+        --ag-card-shadow-hover:
+            0 12px 32px rgba(0, 0, 0, 0.45),
+            0 32px 80px rgba(0, 0, 0, 0.35);
 
         /* Nav Glass - Dark */
         --ag-nav-bg: rgba(0, 0, 0, 0.50);
@@ -411,20 +456,79 @@ img {
     flex-direction: column;
     overflow: hidden;
 
-    background: var(--ag-surface-glass);
-    backdrop-filter: blur(var(--ag-glass-blur));
-    -webkit-backdrop-filter: blur(var(--ag-glass-blur));
-    border: 1px solid var(--ag-border-hairline);
+    background: var(--ag-glass-fill);
+    backdrop-filter: blur(var(--ag-glass-blur)) saturate(var(--ag-glass-saturate));
+    -webkit-backdrop-filter: blur(var(--ag-glass-blur)) saturate(var(--ag-glass-saturate));
+    border: 1px solid var(--ag-glass-edge);
     border-radius: var(--ag-radius-card);
-    box-shadow: var(--ag-card-shadow);
+    box-shadow: var(--ag-card-shadow), var(--ag-glass-inner-glow);
 
     transition: border-color var(--ag-duration-fast) var(--ag-ease-out),
         transform var(--ag-duration-fast) var(--ag-ease-out),
         box-shadow var(--ag-duration-fast) var(--ag-ease-out);
 }
 
+/* Cards also carry .ag-reveal, whose `transition: all 1.2s` (declared later)
+   would win the cascade and slow hover to a crawl. Re-assert the fast
+   transition once the reveal has completed. */
+.ag-card.ag-reveal.is-visible {
+    transition: border-color var(--ag-duration-fast) var(--ag-ease-out),
+        transform var(--ag-duration-fast) var(--ag-ease-out),
+        box-shadow var(--ag-duration-fast) var(--ag-ease-out);
+}
+
+/* Adaptive gradient border — a 1px masked ring above the surface.
+   Decorative only; never intercepts the card link. */
+.ag-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: var(--ag-glass-border-gradient);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    opacity: 0.75;
+    pointer-events: none;
+    z-index: 3;
+    transition: opacity var(--ag-duration-fast) var(--ag-ease-out);
+}
+
+/* Top sheen — soft specular reflection along the upper edge */
+.ag-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: var(--ag-glass-sheen);
+    pointer-events: none;
+    z-index: 3;
+    transition: opacity var(--ag-duration-medium) var(--ag-ease-out);
+}
+
 .ag-card:hover {
     border-color: var(--ag-border-hairline-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--ag-card-shadow-hover), var(--ag-glass-inner-glow);
+}
+
+.ag-card:hover::before {
+    opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ag-card,
+    .ag-card.ag-reveal.is-visible,
+    .ag-card::before,
+    .ag-card::after {
+        transition: none;
+    }
+
+    .ag-card:hover {
+        transform: none;
+    }
 }
 
 /* Card Image */
