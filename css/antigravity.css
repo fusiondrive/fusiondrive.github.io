@@ -8,8 +8,7 @@
 /* ==========================================================================
    1. FOUNDATIONS: Google Fonts
    ========================================================================== */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,400..700&family=JetBrains+Mono:wght@400;500&display=swap');
 
 /* ==========================================================================
    2. DESIGN TOKENS - System Adaptive Theme
@@ -72,7 +71,7 @@
 
     /* === Static Tokens (same in both modes) === */
     /* Typography */
-    --ag-font-display: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --ag-font-display: 'Google Sans Flex', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     --ag-font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
     --ag-tracking-tight: -0.03em;
     --ag-tracking-normal: 0;
@@ -1121,7 +1120,7 @@ img {
 
 /* The image keeps the phone aspect ratio */
 .ag-iphone .ag-iphone-img {
-    aspect-ratio: 1046 / 2066;
+    aspect-ratio: 826 / 1610;
 }
 
 /* Center phone — elevated (no Y offset), slightly larger, stronger shadow */
@@ -1183,7 +1182,8 @@ img {
 
 /* ── CTA button — portfolio style ── */
 .ag-showcase-cta {
-    margin-top: 16px;
+    /* Align the CTA centerline with the lowered side-phone labels. */
+    margin-top: 36px;
     z-index: 10;
 }
 
@@ -1331,6 +1331,7 @@ img {
     .ag-iphone           { width: min(30vw, 200px); transform: translateY(40px); }
     .ag-iphone--featured { width: min(33vw, 220px); transform: translateY(0); }
     .ag-iphone-label     { font-size: 0.55rem; margin-top: 10px; }
+    .ag-showcase-cta     { margin-top: 18px; }
 }
 
 @media (max-width: 480px) {
@@ -1338,4 +1339,5 @@ img {
     .ag-iphone           { width: 29vw; transform: translateY(28px); }
     .ag-iphone--featured { width: 32vw; }
     .ag-iphone-label     { font-size: 0.48rem; letter-spacing: 0.04em; margin-top: 8px; }
+    .ag-showcase-cta     { margin-top: 6px; }
 }

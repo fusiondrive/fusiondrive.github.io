@@ -156,34 +156,46 @@ export const pages = {
                     <div class="ag-skill-category">
                         <h3>Languages</h3>
                         <div class="ag-skill-chips">
-                            <span class="ag-skill-chip">JavaScript (ES6+)</span>
-                            <span class="ag-skill-chip">HTML5/CSS3</span>
-                            <span class="ag-skill-chip">Objective-C</span>
-                            <span class="ag-skill-chip">Python</span>
+                            <span class="ag-skill-chip">C</span>
                             <span class="ag-skill-chip">C++</span>
-                            <span class="ag-skill-chip">Assembly (MSP430)</span>
+                            <span class="ag-skill-chip">Objective-C</span>
+                            <span class="ag-skill-chip">Swift</span>
+                            <span class="ag-skill-chip">Python</span>
+                            <span class="ag-skill-chip">Java</span>
                         </div>
                     </div>
 
                     <div class="ag-skill-category">
-                        <h3>Engineering & Hardware</h3>
+                        <h3>Systems & Tools</h3>
                         <div class="ag-skill-chips">
-                            <span class="ag-skill-chip">Microcontrollers</span>
-                            <span class="ag-skill-chip">System Teardown</span>
-                            <span class="ag-skill-chip">Circuit Analysis</span>
-                            <span class="ag-skill-chip">Component Diagnostics</span>
-                        </div>
-                    </div>
-
-                    <div class="ag-skill-category">
-                        <h3>Design & Tools</h3>
-                        <div class="ag-skill-chips">
-                            <span class="ag-skill-chip">VS Code</span>
-                            <span class="ag-skill-chip">AI-Assisted Dev</span>
-                            <span class="ag-skill-chip">Figma</span>
                             <span class="ag-skill-chip">Git/GitHub</span>
+                            <span class="ag-skill-chip">VS Code</span>
                             <span class="ag-skill-chip">Chrome DevTools</span>
-                            <span class="ag-skill-chip">Onshape</span>
+                            <span class="ag-skill-chip">Unix/Linux CLI</span>
+                            <span class="ag-skill-chip">Hardware Troubleshooting</span>
+                        </div>
+                    </div>
+
+                    <div class="ag-skill-category">
+                        <h3>Web/App</h3>
+                        <div class="ag-skill-chips">
+                            <span class="ag-skill-chip">HTML5</span>
+                            <span class="ag-skill-chip">CSS3 (Flexbox/Grid)</span>
+                            <span class="ag-skill-chip">JavaScript (ES6+)</span>
+                            <span class="ag-skill-chip">React</span>
+                            <span class="ag-skill-chip">RESTful APIs</span>
+                            <span class="ag-skill-chip">AI-assisted prototyping</span>
+                        </div>
+                    </div>
+
+                    <div class="ag-skill-category">
+                        <h3>Design & Visual</h3>
+                        <div class="ag-skill-chips">
+                            <span class="ag-skill-chip">Figma</span>
+                            <span class="ag-skill-chip">Adobe Illustrator/Photoshop</span>
+                            <span class="ag-skill-chip">Material 3 Design System</span>
+                            <span class="ag-skill-chip">Responsive Layouts</span>
+                            <span class="ag-skill-chip">Typography</span>
                         </div>
                     </div>
                 </div>
