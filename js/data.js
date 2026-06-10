@@ -51,16 +51,16 @@ export const pages = {
                             <span class="ag-iphone-label">Onboarding</span>
                         </div>
 
-                        <!-- ── Phone Center · Live Map ── -->
+                        <!-- ── Phone Center · Arrival Prediction ── -->
                         <div class="ag-iphone ag-iphone--featured" id="ph-center">
-                            <img src="assets/CABSF/inapp.png" alt="CABSFlight — Live bus tracking map" class="ag-iphone-img" draggable="false">
-                            <span class="ag-iphone-label ag-iphone-label--c">Live Tracking</span>
+                            <img src="assets/CABSF/prediction.png" alt="CABSFlight — Station arrival predictions" class="ag-iphone-img" draggable="false">
+                            <span class="ag-iphone-label ag-iphone-label--c">Arrival Prediction</span>
                         </div>
 
-                        <!-- ── Phone Right · Route Picker ── -->
+                        <!-- ── Phone Right · Live Map ── -->
                         <div class="ag-iphone" id="ph-right">
-                            <img src="assets/CABSF/boarding2.png" alt="CABSFlight — Choose your bus lines" class="ag-iphone-img" draggable="false">
-                            <span class="ag-iphone-label">Route Picker</span>
+                            <img src="assets/CABSF/inapp.png" alt="CABSFlight — Live bus tracking map" class="ag-iphone-img" draggable="false">
+                            <span class="ag-iphone-label">Live Tracking</span>
                         </div>
 
                     </div><!-- /.ag-showcase-phones -->
